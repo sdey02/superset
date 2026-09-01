@@ -12543,6 +12543,11 @@ msgstr "Všechna vydání na GitHubu"
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.archUnconfirmed"
+msgstr "Váš prohlížeč neuvádí, jaký máte čip, takže toto je build pro Intel. Funguje i na Apple Silicon, přes Rosettu. Na Macu s Apple Silicon si místo toho <0>stáhněte nativní build</0>."
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.autoBodyShort"
 msgstr "Stahování se spustí automaticky. Pokud ne, stáhněte si to zde."
 
@@ -12646,16 +12651,6 @@ msgstr "Superset je desktopová aplikace. Zadejte e-mail a pošleme vám odkaz k
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.mobileTitle"
 msgstr "Získejte Superset na svůj Mac"
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchAppleSilicon"
-msgstr "Toto je build pro Intel. Máte Mac s Apple Silicon? <0>Stáhněte si build pro Apple Silicon</0>."
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchIntel"
-msgstr "Toto je build pro Apple Silicon. Máte Mac s Intelem? <0>Stáhněte si build pro Intel</0>."
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts

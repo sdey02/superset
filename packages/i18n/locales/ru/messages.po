@@ -12543,6 +12543,11 @@ msgstr "Все релизы на GitHub"
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.archUnconfirmed"
+msgstr "Ваш браузер не сообщает, какой у вас чип, поэтому это сборка для Intel. Она работает и на Apple Silicon — через Rosetta. Если у вас Mac на Apple Silicon, лучше <0>скачайте нативную сборку</0>."
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.autoBodyShort"
 msgstr "Загрузка начнётся автоматически. Если этого не произошло, скачайте здесь."
 
@@ -12646,16 +12651,6 @@ msgstr "Superset — десктопное приложение. Введите e
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.mobileTitle"
 msgstr "Установите Superset на Mac"
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchAppleSilicon"
-msgstr "Это сборка для Intel. У вас Mac на Apple Silicon? <0>Скачать сборку для Apple Silicon</0>."
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchIntel"
-msgstr "Это сборка для Apple Silicon. У вас Mac на Intel? <0>Скачать сборку для Intel</0>."
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts

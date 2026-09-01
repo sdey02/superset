@@ -12543,6 +12543,11 @@ msgstr "Tất cả bản phát hành trên GitHub"
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.archUnconfirmed"
+msgstr "Trình duyệt của bạn không cho biết bạn đang dùng chip nào, nên đây là bản build Intel. Bản này cũng chạy được trên Apple Silicon thông qua Rosetta. Nếu dùng máy Mac Apple Silicon, hãy <0>tải bản build native</0> thay thế."
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.autoBodyShort"
 msgstr "Quá trình tải xuống sẽ tự động bắt đầu. Nếu không, hãy tải tại đây."
 
@@ -12646,16 +12651,6 @@ msgstr "Superset là ứng dụng máy tính. Nhập email và chúng tôi sẽ 
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.mobileTitle"
 msgstr "Cài Superset trên máy Mac"
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchAppleSilicon"
-msgstr "Đây là bản build Intel. Bạn đang dùng máy Mac chạy Apple Silicon? <0>Tải bản build Apple Silicon</0>."
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchIntel"
-msgstr "Đây là bản build Apple Silicon. Bạn đang dùng máy Mac chạy Intel? <0>Tải bản build Intel</0>."
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts

@@ -12543,6 +12543,11 @@ msgstr "GitHub의 전체 릴리스"
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.archUnconfirmed"
+msgstr "브라우저가 사용 중인 칩 정보를 제공하지 않아 Intel 빌드로 표시됩니다. 이 빌드는 Rosetta를 통해 Apple Silicon에서도 실행됩니다. Apple Silicon Mac이라면 대신 <0>네이티브 빌드를 받으세요</0>."
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.autoBodyShort"
 msgstr "다운로드가 자동으로 시작됩니다. 시작되지 않으면 여기서 받으세요."
 
@@ -12646,16 +12651,6 @@ msgstr "Superset은 데스크톱 앱입니다. 이메일을 입력하시면 Mac�
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.mobileTitle"
 msgstr "Mac에서 Superset 사용하기"
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchAppleSilicon"
-msgstr "Intel 빌드입니다. Apple Silicon Mac을 사용 중이신가요? <0>Apple Silicon 빌드 받기</0>."
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchIntel"
-msgstr "Apple Silicon 빌드입니다. Intel Mac을 사용 중이신가요? <0>Intel 빌드 받기</0>."
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts

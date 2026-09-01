@@ -12543,6 +12543,11 @@ msgstr "Todas las versiones en GitHub"
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.archUnconfirmed"
+msgstr "Tu navegador no indica qué chip tienes, así que esta es la versión para Intel. También funciona en Apple Silicon, mediante Rosetta. Si tienes un Mac con Apple Silicon, <0>descarga la versión nativa</0> en su lugar."
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.autoBodyShort"
 msgstr "La descarga empieza automáticamente. Si no ha empezado, consíguela aquí."
 
@@ -12646,16 +12651,6 @@ msgstr "Superset es una app de escritorio. Introduce tu correo y te enviaremos u
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.mobileTitle"
 msgstr "Consigue Superset en tu Mac"
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchAppleSilicon"
-msgstr "Esta es la versión para Intel. ¿Usas un Mac con Apple Silicon? <0>Consigue la versión para Apple Silicon</0>."
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchIntel"
-msgstr "Esta es la versión para Apple Silicon. ¿Usas un Mac con Intel? <0>Consigue la versión para Intel</0>."
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts

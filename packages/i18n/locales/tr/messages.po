@@ -12543,6 +12543,11 @@ msgstr "GitHub'daki tüm sürümler"
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.archUnconfirmed"
+msgstr "Tarayıcınız hangi yongaya sahip olduğunuzu bildirmediğinden bu, Intel derlemesidir. Rosetta aracılığıyla Apple Silicon'da da çalışır. Apple Silicon Mac kullanıyorsanız bunun yerine <0>yerel derlemeyi indirin</0>."
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.autoBodyShort"
 msgstr "İndirme otomatik olarak başlıyor. Başlamadıysa buradan indirin."
 
@@ -12646,16 +12651,6 @@ msgstr "Superset bir masaüstü uygulamasıdır. E-postanızı girin, Mac'inizde
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.mobileTitle"
 msgstr "Superset'i Mac'inize alın"
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchAppleSilicon"
-msgstr "Bu, Intel sürümüdür. Apple Silicon Mac mi kullanıyorsunuz? <0>Apple Silicon sürümünü indirin</0>."
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchIntel"
-msgstr "Bu, Apple Silicon sürümüdür. Intel Mac mi kullanıyorsunuz? <0>Intel sürümünü indirin</0>."
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts

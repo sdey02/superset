@@ -12543,6 +12543,11 @@ msgstr "Semua rilis di GitHub"
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.archUnconfirmed"
+msgstr "Browser Anda tidak melaporkan chip yang Anda gunakan, jadi ini adalah build Intel. Build ini juga berjalan di Apple Silicon melalui Rosetta. Pada Mac dengan Apple Silicon, <0>ambil build native</0> sebagai gantinya."
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.autoBodyShort"
 msgstr "Unduhan Anda dimulai otomatis. Jika tidak, ambil di sini."
 
@@ -12646,16 +12651,6 @@ msgstr "Superset adalah aplikasi desktop. Masukkan email Anda dan kami akan meng
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.mobileTitle"
 msgstr "Dapatkan Superset di Mac Anda"
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchAppleSilicon"
-msgstr "Ini adalah build Intel. Menggunakan Mac Apple Silicon? <0>Dapatkan build Apple Silicon</0>."
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchIntel"
-msgstr "Ini adalah build Apple Silicon. Menggunakan Mac Intel? <0>Dapatkan build Intel</0>."
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts

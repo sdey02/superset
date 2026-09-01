@@ -12543,6 +12543,11 @@ msgstr "GitHubのすべてのリリース"
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.archUnconfirmed"
+msgstr "お使いのブラウザはチップの種類を報告しないため、これはIntel版です。Rosetta経由でApple Siliconでも動作します。Apple SiliconのMacをお使いの場合は、代わりに<0>ネイティブ版を入手</0>してください。"
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.autoBodyShort"
 msgstr "ダウンロードは自動的に開始されます。開始されない場合はこちらから取得してください。"
 
@@ -12646,16 +12651,6 @@ msgstr "Supersetはデスクトップアプリです。メールアドレスを�
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.mobileTitle"
 msgstr "MacでSupersetを使う"
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchAppleSilicon"
-msgstr "これはIntel版ビルドです。Apple Silicon Macをお使いですか?<0>Apple Silicon版ビルドを入手</0>。"
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchIntel"
-msgstr "これはApple Silicon版ビルドです。Intel Macをお使いですか?<0>Intel版ビルドを入手</0>。"
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts

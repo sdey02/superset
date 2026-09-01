@@ -12543,6 +12543,11 @@ msgstr "GitHub 上的所有版本"
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.archUnconfirmed"
+msgstr "您的瀏覽器未回報裝置使用的晶片，因此這是Intel版本。它也可透過Rosetta在Apple Silicon上執行。若使用Apple Silicon的Mac，請改為<0>取得原生版本</0>。"
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.autoBodyShort"
 msgstr "下載將自動開始。若未開始，請由此取得。"
 
@@ -12646,16 +12651,6 @@ msgstr "Superset是桌面應用程式。留下電子郵件，我們會把下載�
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
 msgid "marketing.download.mobileTitle"
 msgstr "在Mac上獲取Superset"
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchAppleSilicon"
-msgstr "這是 Intel 版本。使用 Apple Silicon Mac？<0>取得 Apple Silicon 版本</0>。"
-
-#. js-lingui-explicit-id
-#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
-msgid "marketing.download.otherArchIntel"
-msgstr "這是 Apple Silicon 版本。使用 Intel Mac？<0>取得 Intel 版本</0>。"
 
 #. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts

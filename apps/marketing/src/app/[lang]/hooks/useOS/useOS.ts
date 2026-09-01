@@ -86,12 +86,15 @@ async function detectMacArch(): Promise<PlatformInfo> {
 		// Fall through to the default below.
 	}
 
-	// Safari and Firefox expose no architecture signal at all. Apple last
-	// shipped an Intel Mac in 2023, so Apple Silicon is the safe assumption,
-	// and the release table on /download lists every build for anyone the
-	// default gets wrong.
+	// Safari and Firefox expose no architecture signal at all, so this is a
+	// fallback rather than an answer, and the two builds fail differently:
+	// Rosetta translates x86 to arm but not the reverse, so the x64 build runs
+	// on either machine while an arm64 build cannot launch on an Intel Mac.
+	// The runnable one is therefore the only safe guess. Callers must treat
+	// ArchSource.Default as "unconfirmed" and say so rather than claiming to
+	// have detected an Intel Mac.
 	return {
-		platform: Platform.MacAppleSilicon,
+		platform: Platform.MacIntel,
 		archSource: ArchSource.Default,
 	};
 }

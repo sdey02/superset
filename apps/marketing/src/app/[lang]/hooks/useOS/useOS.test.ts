@@ -107,9 +107,11 @@ describe("Mac architecture detection", () => {
 		],
 		["getHighEntropyValues rejects", { rejects: true }],
 		["architecture is an unrecognised value", { architecture: "wasm" }],
-	])("defaults to Apple Silicon when %s", async (_label, options) => {
+	])("falls back to the runnable build when %s", async (_label, options) => {
+		// x64 runs on both architectures via Rosetta; arm64 cannot launch on an
+		// Intel Mac. With no signal, only the runnable one is safe.
 		expect(await resolve(options)).toEqual({
-			platform: Platform.MacAppleSilicon,
+			platform: Platform.MacIntel,
 			archSource: ArchSource.Default,
 		});
 	});
