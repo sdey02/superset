@@ -12648,6 +12648,16 @@ msgid "marketing.download.mobileTitle"
 msgstr "Pobierz Superset na Maca"
 
 #. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.otherArchAppleSilicon"
+msgstr "To jest wersja dla Intela. Masz Maca z Apple Silicon? <0>Pobierz wersję dla Apple Silicon</0>."
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.otherArchIntel"
+msgstr "To jest wersja dla Apple Silicon. Masz Maca z procesorem Intel? <0>Pobierz wersję dla Intela</0>."
+
+#. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts
 msgid "marketing.download.rateLimited"
 msgstr "Zbyt wiele żądań. Spróbuj ponownie później."

@@ -12648,6 +12648,16 @@ msgid "marketing.download.mobileTitle"
 msgstr "Získejte Superset na svůj Mac"
 
 #. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.otherArchAppleSilicon"
+msgstr "Toto je build pro Intel. Máte Mac s Apple Silicon? <0>Stáhněte si build pro Apple Silicon</0>."
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.otherArchIntel"
+msgstr "Toto je build pro Apple Silicon. Máte Mac s Intelem? <0>Stáhněte si build pro Intel</0>."
+
+#. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts
 msgid "marketing.download.rateLimited"
 msgstr "Příliš mnoho požadavků. Zkuste to prosím později."

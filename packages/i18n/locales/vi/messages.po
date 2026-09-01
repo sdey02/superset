@@ -12648,6 +12648,16 @@ msgid "marketing.download.mobileTitle"
 msgstr "Cài Superset trên máy Mac"
 
 #. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.otherArchAppleSilicon"
+msgstr "Đây là bản build Intel. Bạn đang dùng máy Mac chạy Apple Silicon? <0>Tải bản build Apple Silicon</0>."
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.otherArchIntel"
+msgstr "Đây là bản build Apple Silicon. Bạn đang dùng máy Mac chạy Intel? <0>Tải bản build Intel</0>."
+
+#. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts
 msgid "marketing.download.rateLimited"
 msgstr "Quá nhiều yêu cầu. Vui lòng thử lại sau."

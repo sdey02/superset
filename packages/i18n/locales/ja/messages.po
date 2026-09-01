@@ -12648,6 +12648,16 @@ msgid "marketing.download.mobileTitle"
 msgstr "MacでSupersetを使う"
 
 #. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.otherArchAppleSilicon"
+msgstr "これはIntel版ビルドです。Apple Silicon Macをお使いですか?<0>Apple Silicon版ビルドを入手</0>。"
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.otherArchIntel"
+msgstr "これはApple Silicon版ビルドです。Intel Macをお使いですか?<0>Intel版ビルドを入手</0>。"
+
+#. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts
 msgid "marketing.download.rateLimited"
 msgstr "リクエストが多すぎます。しばらくしてからお試しください。"

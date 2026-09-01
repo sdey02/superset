@@ -12648,6 +12648,16 @@ msgid "marketing.download.mobileTitle"
 msgstr "Superset'i Mac'inize alın"
 
 #. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.otherArchAppleSilicon"
+msgstr "Bu, Intel sürümüdür. Apple Silicon Mac mi kullanıyorsunuz? <0>Apple Silicon sürümünü indirin</0>."
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.otherArchIntel"
+msgstr "Bu, Apple Silicon sürümüdür. Intel Mac mi kullanıyorsunuz? <0>Intel sürümünü indirin</0>."
+
+#. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts
 msgid "marketing.download.rateLimited"
 msgstr "Çok fazla istek. Lütfen daha sonra yeniden deneyin."

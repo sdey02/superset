@@ -12648,6 +12648,16 @@ msgid "marketing.download.mobileTitle"
 msgstr "在Mac上获取Superset"
 
 #. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.otherArchAppleSilicon"
+msgstr "这是 Intel 版本。使用 Apple Silicon Mac？<0>获取 Apple Silicon 版本</0>。"
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.otherArchIntel"
+msgstr "这是 Apple Silicon 版本。使用 Intel Mac？<0>获取 Intel 版本</0>。"
+
+#. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts
 msgid "marketing.download.rateLimited"
 msgstr "请求过于频繁。请稍后重试。"

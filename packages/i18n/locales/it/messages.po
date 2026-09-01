@@ -12648,6 +12648,16 @@ msgid "marketing.download.mobileTitle"
 msgstr "Ottieni Superset sul tuo Mac"
 
 #. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.otherArchAppleSilicon"
+msgstr "Questa è la build Intel. Hai un Mac con Apple Silicon? <0>Scarica la build Apple Silicon</0>."
+
+#. js-lingui-explicit-id
+#: ../../apps/marketing/src/app/[lang]/download/components/DownloadInterstitial/DownloadInterstitial.tsx
+msgid "marketing.download.otherArchIntel"
+msgstr "Questa è la build Apple Silicon. Hai un Mac Intel? <0>Scarica la build Intel</0>."
+
+#. js-lingui-explicit-id
 #: ../../apps/marketing/src/app/[lang]/download/components/DownloadLinkForm/actions.ts
 msgid "marketing.download.rateLimited"
 msgstr "Troppe richieste. Riprova più tardi."
