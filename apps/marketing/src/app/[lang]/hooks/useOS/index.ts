@@ -5,5 +5,5 @@ export {
 	normalizeArch,
 	Platform,
 	type PlatformInfo,
-} from "./platform";
-export { usePlatform } from "./useOS";
+	usePlatform,
+} from "./useOS";
