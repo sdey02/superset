@@ -776,7 +776,8 @@ msgid "#{0} {1}\n"
 "\n"
 "This merges into {2} and cannot be undone here."
 msgstr "#{0} {1}\n"
-""
+"\n"
+"这将合并到 {2}，且无法在此撤销。"
 
 msgid "#engineering"
 msgstr "#engineering"
@@ -2384,7 +2385,7 @@ msgstr "点击继续即表示你同意我们的<0>服务条款</0>和<1>隐私�
 msgid "By signing in, you agree to our\n"
 "<0>Terms of Service</0> and <1>Privacy Policy</1>"
 msgstr "登录即表示你同意我们的\n"
-""
+"<0>服务条款</0>和<1>隐私政策</1>"
 
 msgid "By signing in, you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>"
 msgstr "登录即表示你同意我们的<0>服务条款</0>和<1>隐私政策</1>"

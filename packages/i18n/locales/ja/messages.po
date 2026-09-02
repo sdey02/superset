@@ -776,7 +776,8 @@ msgid "#{0} {1}\n"
 "\n"
 "This merges into {2} and cannot be undone here."
 msgstr "#{0} {1}\n"
-""
+"\n"
+"これは {2} にマージされ、ここでは取り消せません。"
 
 msgid "#engineering"
 msgstr "#engineering"
@@ -2384,7 +2385,7 @@ msgstr "続行をクリックすると、<0>利用規約</0>と<1>プライバ�
 msgid "By signing in, you agree to our\n"
 "<0>Terms of Service</0> and <1>Privacy Policy</1>"
 msgstr "サインインすると、以下に同意したことになります\n"
-""
+"<0>利用規約</0>と<1>プライバシーポリシー</1>"
 
 msgid "By signing in, you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>"
 msgstr "サインインすると、<0>利用規約</0>と<1>プライバシーポリシー</1>に同意したことになります"

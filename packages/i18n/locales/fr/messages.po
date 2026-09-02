@@ -776,7 +776,8 @@ msgid "#{0} {1}\n"
 "\n"
 "This merges into {2} and cannot be undone here."
 msgstr "#{0} {1}\n"
-""
+"\n"
+"Ceci fusionne dans {2} et ne peut pas être annulé ici."
 
 msgid "#engineering"
 msgstr "#engineering"
@@ -2384,7 +2385,7 @@ msgstr "En cliquant sur continuer, vous acceptez nos <0>Conditions d'utilisation
 msgid "By signing in, you agree to our\n"
 "<0>Terms of Service</0> and <1>Privacy Policy</1>"
 msgstr "En vous connectant, vous acceptez nos\n"
-""
+"<0>Conditions d'utilisation</0> et notre <1>Politique de confidentialité</1>"
 
 msgid "By signing in, you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>"
 msgstr "En vous connectant, vous acceptez nos <0>Conditions d'utilisation</0> et notre <1>Politique de confidentialité</1>"
