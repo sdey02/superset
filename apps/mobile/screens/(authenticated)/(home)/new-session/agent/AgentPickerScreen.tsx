@@ -77,12 +77,10 @@ export function AgentPickerScreen() {
 	let retry: (() => void) | null = null;
 	if (!machineId) {
 		notice = t({
-			id: "mobile.agentPicker.noProjectSelected",
 			message: "No project selected",
 		});
 	} else if (machineId === CLOUD_TARGET_ID) {
 		notice = t({
-			id: "mobile.agentPicker.cloudNoAgent",
 			message: "Cloud workspaces don't run an agent yet",
 		});
 	} else if (!host) {
@@ -90,25 +88,21 @@ export function AgentPickerScreen() {
 			isLoading = true;
 		} else if (hostsQuery.isError) {
 			notice = t({
-				id: "mobile.agentPicker.machinesLoadFailed",
 				message: "Could not load your machines",
 			});
 			retry = () => void hostsQuery.refetch();
 		} else {
 			notice = t({
-				id: "mobile.agentPicker.machineUnavailable",
 				message: "That machine is no longer available",
 			});
 		}
 	} else if (!isOnline) {
 		notice = t({
-			id: "mobile.agentPicker.hostOffline",
 			message: `${host.name} is offline`,
 		});
 	} else if (configs.length === 0) {
 		if (configsQuery.isError) {
 			notice = t({
-				id: "mobile.agentPicker.agentsLoadFailed",
 				message: `Could not load agents from ${host.name}`,
 			});
 			retry = () => void configsQuery.refetch();
@@ -116,7 +110,6 @@ export function AgentPickerScreen() {
 			isLoading = true;
 		} else {
 			notice = t({
-				id: "mobile.agentPicker.noAgentsConfigured",
 				message: `No agents configured on ${host.name}`,
 			});
 		}
@@ -150,7 +143,7 @@ export function AgentPickerScreen() {
 					{retry ? (
 						<Button size="sm" variant="secondary" onPress={retry}>
 							<Text>
-								<Trans id="mobile.common.tryAgain">Try again</Trans>
+								<Trans>Try again</Trans>
 							</Text>
 						</Button>
 					) : null}

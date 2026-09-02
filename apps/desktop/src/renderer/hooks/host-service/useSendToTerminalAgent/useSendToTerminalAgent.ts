@@ -83,13 +83,11 @@ export function useSendToTerminalAgent(): UseSendToTerminalAgentResult {
 				const message = errorMessage(
 					error,
 					t({
-						id: "hooks.sendToTerminalAgent.unknownError",
 						message: "Unknown error",
 					}),
 				);
 				toast.error(
 					t({
-						id: "hooks.sendToTerminalAgent.sendFailed",
 						message: "Couldn't send to agent",
 					}),
 					{ description: message },

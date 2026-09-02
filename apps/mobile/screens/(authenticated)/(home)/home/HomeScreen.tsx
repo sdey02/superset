@@ -290,7 +290,7 @@ export function HomeScreen() {
 			items.push({
 				kind: "projectHeader",
 				projectId: "__none",
-				name: t({ id: "mobile.home.noProject", message: "No project" }),
+				name: t({ message: "No project" }),
 				count: orphans.length,
 				collapsed: false,
 			});
@@ -542,7 +542,6 @@ export function HomeScreen() {
 					<Stack.Toolbar.Button
 						icon="magnifyingglass"
 						accessibilityLabel={t({
-							id: "mobile.home.searchWorkspaces",
 							message: "Search workspaces",
 						})}
 						onPress={() => {
@@ -591,11 +590,9 @@ export function HomeScreen() {
 								<Text className="text-center text-muted-foreground">
 									{cloudScope
 										? t({
-												id: "mobile.home.emptyCloud",
 												message: "No cloud workspaces yet",
 											})
 										: t({
-												id: "mobile.home.emptyHost",
 												message: "No projects on this host yet",
 											})}
 								</Text>

@@ -53,9 +53,8 @@ export function ChangesToolbar({
 }: ChangesToolbarProps) {
 	const { t } = useLingui();
 	const label = collapsed
-		? t({ id: "workspace.changesToolbar.expandAll", message: "Expand all" })
+		? t({ message: "Expand all" })
 		: t({
-				id: "workspace.changesToolbar.collapseAll",
 				message: "Collapse all",
 			});
 	const Icon = collapsed ? UnfoldVertical : FoldVertical;
@@ -69,12 +68,7 @@ export function ChangesToolbar({
 					uncommittedCount={uncommittedCount}
 				/>
 				<span className="whitespace-nowrap">
-					<Plural
-						id="workspace.changesToolbar.fileCount"
-						value={totalFiles}
-						one="# file"
-						other="# files"
-					/>
+					<Plural value={totalFiles} one="# file" other="# files" />
 				</span>
 				{(totalAdditions > 0 || totalDeletions > 0) && (
 					<span className="whitespace-nowrap">
@@ -100,7 +94,6 @@ export function ChangesToolbar({
 								onClick={onRefresh}
 								disabled={isRefreshing}
 								aria-label={t({
-									id: "workspace.changesToolbar.refreshAria",
 									message: "Refresh changes",
 								})}
 							>
@@ -110,9 +103,7 @@ export function ChangesToolbar({
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent side="bottom">
-							<Trans id="workspace.changesToolbar.refreshTooltip">
-								Refresh changes
-							</Trans>
+							<Trans>Refresh changes</Trans>
 						</TooltipContent>
 					</Tooltip>
 					<Tooltip>

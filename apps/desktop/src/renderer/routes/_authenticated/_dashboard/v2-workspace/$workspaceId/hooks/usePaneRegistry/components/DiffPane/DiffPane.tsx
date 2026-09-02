@@ -198,12 +198,10 @@ export function DiffPane({
 			if (!file || !worktreePath) {
 				toast.error(
 					t({
-						id: "workspace.diffPane.saveEditsFailedToast",
 						message: "Couldn't save edits",
 					}),
 					{
 						description: t({
-							id: "workspace.diffPane.saveEditsNotReadyBody",
 							message: "The workspace is not ready yet. Try again.",
 						}),
 					},
@@ -220,19 +218,16 @@ export function DiffPane({
 				if (!result.ok) {
 					toast.error(
 						t({
-							id: "workspace.diffPane.saveEditsRejectedToast",
 							message: "Couldn't save edits",
 						}),
 						{
 							description:
 								result.reason === "conflict"
 									? t({
-											id: "workspace.diffPane.saveEditsConflictBody",
 											message:
 												"The file changed on disk. Review it before saving again.",
 										})
 									: t({
-											id: "workspace.diffPane.saveEditsWriteFailedBody",
 											message: "The file could not be written.",
 										}),
 						},
@@ -250,7 +245,6 @@ export function DiffPane({
 			} catch (error) {
 				toast.error(
 					t({
-						id: "workspace.diffPane.saveEditsErrorToast",
 						message: "Couldn't save edits",
 					}),
 					{
@@ -305,21 +299,18 @@ export function DiffPane({
 			const name =
 				file?.path.split("/").pop() ??
 				t({
-					id: "workspace.diffPane.thisFileFallback",
 					message: "this file",
 				});
 			alert({
 				title: t({
-					id: "workspace.diffPane.saveChangesTitle",
 					message: `Do you want to save the changes you made to ${name}?`,
 				}),
 				description: t({
-					id: "workspace.diffPane.saveChangesBody",
 					message: "Your changes will be lost if you don't save them.",
 				}),
 				actions: [
 					{
-						label: t({ id: "workspace.diffPane.save", message: "Save" }),
+						label: t({ message: "Save" }),
 						onClick: () => {
 							void saveEditedItem(itemId).then((saved) => {
 								if (saved) exitEditing(itemId);
@@ -328,14 +319,13 @@ export function DiffPane({
 					},
 					{
 						label: t({
-							id: "workspace.diffPane.dontSave",
 							message: "Don't Save",
 						}),
 						variant: "secondary",
 						onClick: () => discardEditing(itemId),
 					},
 					{
-						label: t({ id: "workspace.diffPane.cancel", message: "Cancel" }),
+						label: t({ message: "Cancel" }),
 						variant: "ghost",
 						onClick: () => {},
 					},
@@ -629,16 +619,13 @@ export function DiffPane({
 						contextLabel={
 							m.startLine === m.endLine
 								? t({
-										id: "workspace.diffPane.composerLine",
 										message: `Line ${m.startLine}`,
 									})
 								: t({
-										id: "workspace.diffPane.composerLines",
 										message: `Lines ${m.startLine}–${m.endLine}`,
 									})
 						}
 						placeholder={t({
-							id: "workspace.diffPane.composerPlaceholder",
 							message: "Ask the AI about these lines…",
 						})}
 						onCancel={clearComposer}
@@ -685,9 +672,7 @@ export function DiffPane({
 	if (files.length === 0) {
 		return (
 			<div className="flex h-full w-full items-center justify-center text-sm text-muted-foreground">
-				{isLoading
-					? t({ id: "workspace.diffPane.loading", message: "Loading…" })
-					: t({ id: "workspace.diffPane.noChanges", message: "No changes" })}
+				{isLoading ? t({ message: "Loading…" }) : t({ message: "No changes" })}
 			</div>
 		);
 	}
@@ -749,9 +734,7 @@ function BinaryDiffPlaceholder({
 		<div className="flex flex-col items-center justify-center gap-3 bg-muted/30 py-8 text-muted-foreground">
 			<LuFileCode className="size-8" />
 			<p className="cursor-text select-text text-sm">
-				<Trans id="workspace.diffPane.binaryFileHidden">
-					Binary file hidden
-				</Trans>
+				<Trans>Binary file hidden</Trans>
 			</p>
 			{canOpen ? (
 				<Button
@@ -759,7 +742,7 @@ function BinaryDiffPlaceholder({
 					size="sm"
 					onClick={() => onOpenFile(file.path)}
 				>
-					<Trans id="workspace.diffPane.openFile">Open file</Trans>
+					<Trans>Open file</Trans>
 				</Button>
 			) : null}
 		</div>

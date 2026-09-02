@@ -174,7 +174,6 @@ export function DashboardSidebarExpandedProjectContent({
 								<SidebarDropZone
 									dropZoneId={dropZoneId(projectId)}
 									label={t({
-										id: "dashboard.sidebar.projectContent.dropToUnpin",
 										message: "Drop to unpin",
 									})}
 								/>

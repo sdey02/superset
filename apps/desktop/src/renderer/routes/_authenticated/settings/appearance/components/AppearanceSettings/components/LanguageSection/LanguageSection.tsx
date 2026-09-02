@@ -35,7 +35,6 @@ export function LanguageSection() {
 						if (error.data?.code === "UNAUTHORIZED") return;
 						toast.error(
 							t({
-								id: "settings.appearance.language.syncFailed",
 								message:
 									"Language saved on this device, but syncing it to your account failed.",
 							}),
@@ -47,7 +46,6 @@ export function LanguageSection() {
 		onError: () =>
 			toast.error(
 				t({
-					id: "settings.appearance.language.updateFailed",
 					message: "Failed to update language",
 				}),
 			),
@@ -59,7 +57,6 @@ export function LanguageSection() {
 				<div className="text-sm font-medium">
 					<HighlightText
 						text={t({
-							id: "settings.appearance.language.label",
 							message: "Language",
 						})}
 						query={searchQuery}
@@ -68,7 +65,6 @@ export function LanguageSection() {
 				<div className="text-xs text-muted-foreground">
 					<HighlightText
 						text={t({
-							id: "settings.appearance.language.hint",
 							message:
 								"App display language. Auto follows your system language.",
 						})}
@@ -87,7 +83,7 @@ export function LanguageSection() {
 				</SelectTrigger>
 				<SelectContent>
 					<SelectItem value={AUTO}>
-						<Trans id="settings.appearance.language.auto">Auto (system)</Trans>
+						<Trans>Auto (system)</Trans>
 					</SelectItem>
 					{SUPPORTED_LOCALES.map((locale) => (
 						<SelectItem key={locale} value={locale}>

@@ -352,7 +352,6 @@ export function PromptGroup({
 	const submitBlocker = useMemo<string | null>(() => {
 		if (!projectId && !draft.isSession)
 			return t({
-				id: "dashboard.newWorkspaceModal.promptGroup.blockerSelectProject",
 				message: "Select a project",
 			});
 		const selectedHostId = draft.hostId ?? machineId;
@@ -361,19 +360,16 @@ export function PromptGroup({
 		if (selectedHostId === CLOUD_HOST_ID) return null;
 		if (!selectedHostId)
 			return t({
-				id: "dashboard.newWorkspaceModal.promptGroup.blockerNoActiveHost",
 				message: "No active host",
 			});
 		if (selectedHostId !== machineId) {
 			const remote = otherHosts.find((h) => h.id === selectedHostId);
 			if (!remote?.isOnline)
 				return t({
-					id: "dashboard.newWorkspaceModal.promptGroup.blockerHostOffline",
 					message: "Host is offline",
 				});
 		} else if (!activeHostUrl) {
 			return t({
-				id: "dashboard.newWorkspaceModal.promptGroup.blockerHostServiceNotRunning",
 				message: "Host service is not running",
 			});
 		}
@@ -462,7 +458,6 @@ export function PromptGroup({
 				<Input
 					className="border-none bg-transparent dark:bg-transparent shadow-none text-base font-medium px-0 h-auto focus-visible:ring-0 placeholder:text-muted-foreground/40 min-w-0 flex-1"
 					placeholder={t({
-						id: "dashboard.newWorkspaceModal.promptGroup.workspaceNamePlaceholder",
 						message: "Workspace name (optional)",
 					})}
 					value={workspaceName}
@@ -485,7 +480,6 @@ export function PromptGroup({
 						placeholder={
 							branchPreview ||
 							t({
-								id: "dashboard.newWorkspaceModal.promptGroup.branchNamePlaceholder",
 								message: "branch name",
 							})
 						}
@@ -517,7 +511,6 @@ export function PromptGroup({
 								variant="ghost"
 								size="icon"
 								aria-label={t({
-									id: "dashboard.newWorkspaceModal.promptGroup.updateNamingInstructionsAria",
 									message: "Update naming instructions",
 								})}
 								className="ml-2 size-6 shrink-0 text-muted-foreground"
@@ -527,7 +520,7 @@ export function PromptGroup({
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent>
-							<Trans id="dashboard.newWorkspaceModal.promptGroup.updateNamingInstructions">
+							<Trans>
 								Update naming instructions for {selectedProject.name}
 							</Trans>
 						</TooltipContent>
@@ -536,7 +529,6 @@ export function PromptGroup({
 				<PromptHistoryCommand
 					onSelect={applyPrompt}
 					tooltipLabel={t({
-						id: "dashboard.newWorkspaceModal.promptGroup.previousPrompts",
 						message: "Previous prompts",
 					})}
 				>
@@ -545,7 +537,6 @@ export function PromptGroup({
 						variant="ghost"
 						size="icon"
 						aria-label={t({
-							id: "dashboard.newWorkspaceModal.promptGroup.previousPrompts",
 							message: "Previous prompts",
 						})}
 						className="ml-2 size-6 shrink-0 text-muted-foreground"
@@ -630,7 +621,6 @@ export function PromptGroup({
 					onPasteFiles={(files) => attachments.add(files)}
 					autoFocus={promptSeed > 0 || prompt ? "end" : "start"}
 					placeholder={t({
-						id: "dashboard.newWorkspaceModal.promptGroup.promptPlaceholder",
 						message: "What do you want to do?",
 					})}
 					className="flex flex-col min-h-[100px] max-h-[200px] px-3 pt-3"
@@ -648,7 +638,6 @@ export function PromptGroup({
 							agents={v2Agents}
 							value={selectedAgent}
 							placeholder={t({
-								id: "dashboard.newWorkspaceModal.promptGroup.noAgent",
 								message: "No agent",
 							})}
 							onValueChange={setSelectedAgent}
@@ -657,7 +646,6 @@ export function PromptGroup({
 							iconClassName="size-3 object-contain"
 							allowNone
 							noneLabel={t({
-								id: "dashboard.newWorkspaceModal.promptGroup.noAgent",
 								message: "No agent",
 							})}
 							noneValue="none"
@@ -668,7 +656,6 @@ export function PromptGroup({
 								value={selectedModel}
 								onValueChange={setSelectedModel}
 								defaultLabel={t({
-									id: "dashboard.newWorkspaceModal.promptGroup.defaultModel",
 									message: "Default model",
 								})}
 								triggerClassName={`${PILL_BUTTON_CLASS} px-1.5 gap-1 text-foreground w-auto max-w-[160px]`}
@@ -680,7 +667,6 @@ export function PromptGroup({
 								value={selectedEffort}
 								onValueChange={setSelectedEffort}
 								defaultLabel={t({
-									id: "dashboard.newWorkspaceModal.promptGroup.defaultEffort",
 									message: "Default effort",
 								})}
 								triggerClassName={`${PILL_BUTTON_CLASS} px-1.5 gap-1 text-foreground w-auto max-w-[160px]`}
@@ -692,7 +678,6 @@ export function PromptGroup({
 								value={selectedMode}
 								onValueChange={setSelectedMode}
 								defaultLabel={t({
-									id: "dashboard.newWorkspaceModal.promptGroup.directMode",
 									message: "Direct mode",
 								})}
 								triggerClassName={`${PILL_BUTTON_CLASS} px-1.5 gap-1 text-foreground w-auto max-w-[160px]`}
@@ -705,13 +690,11 @@ export function PromptGroup({
 								<IssueLinkCommand
 									onSelect={addLinkedIssue}
 									tooltipLabel={t({
-										id: "dashboard.newWorkspaceModal.promptGroup.linkIssue",
 										message: "Link issue",
 									})}
 								>
 									<PromptInputButton
 										aria-label={t({
-											id: "dashboard.newWorkspaceModal.promptGroup.linkIssue",
 											message: "Link issue",
 										})}
 										className={`${PILL_BUTTON_CLASS} w-[22px]`}
@@ -733,13 +716,11 @@ export function PromptGroup({
 									projectId={projectId}
 									hostId={hostId}
 									tooltipLabel={t({
-										id: "dashboard.newWorkspaceModal.promptGroup.linkGitHubIssue",
 										message: "Link GitHub issue",
 									})}
 								>
 									<PromptInputButton
 										aria-label={t({
-											id: "dashboard.newWorkspaceModal.promptGroup.linkGitHubIssue",
 											message: "Link GitHub issue",
 										})}
 										className={`${PILL_BUTTON_CLASS} w-[22px]`}
@@ -754,13 +735,11 @@ export function PromptGroup({
 									projectId={projectId}
 									hostId={hostId}
 									tooltipLabel={t({
-										id: "dashboard.newWorkspaceModal.promptGroup.linkPullRequest",
 										message: "Link pull request",
 									})}
 								>
 									<PromptInputButton
 										aria-label={t({
-											id: "dashboard.newWorkspaceModal.promptGroup.linkPullRequest",
 											message: "Link pull request",
 										})}
 										className={`${PILL_BUTTON_CLASS} w-[22px]`}
@@ -826,9 +805,7 @@ export function PromptGroup({
 								className="flex items-center gap-1 text-xs text-muted-foreground"
 							>
 								<LuGitPullRequest className="size-3 shrink-0" />
-								<Trans id="dashboard.newWorkspaceModal.promptGroup.basedOffPr">
-									based off PR #{linkedPR.prNumber}
-								</Trans>
+								<Trans>based off PR #{linkedPR.prNumber}</Trans>
 							</motion.span>
 						) : (
 							<motion.div
@@ -855,9 +832,7 @@ export function PromptGroup({
 							className="h-6 px-2 text-[11px] text-amber-500 hover:text-amber-500"
 							onClick={handleGoToSetup}
 						>
-							<Trans id="dashboard.newWorkspaceModal.promptGroup.setUpProject">
-								Set up project…
-							</Trans>
+							<Trans>Set up project…</Trans>
 						</Button>
 					) : (
 						<span className="text-[11px] text-muted-foreground/50">

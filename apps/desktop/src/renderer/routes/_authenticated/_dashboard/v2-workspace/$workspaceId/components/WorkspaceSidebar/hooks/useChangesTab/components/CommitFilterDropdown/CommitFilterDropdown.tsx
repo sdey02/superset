@@ -1,3 +1,4 @@
+import { msg } from "@lingui/core/macro";
 import { Plural, Trans } from "@lingui/react/macro";
 import type { AppRouter } from "@superset/host-service";
 import { i18n } from "@superset/i18n";
@@ -20,15 +21,17 @@ type Commit =
 
 function getFilterLabel(filter: ChangesFilter, commits: Commit[]): string {
 	if (filter.kind === "all")
-		return i18n._({
-			id: "workspace.commitFilter.allChanges",
-			message: "All changes",
-		});
+		return i18n._(
+			msg({
+				message: "All changes",
+			}),
+		);
 	if (filter.kind === "uncommitted")
-		return i18n._({
-			id: "workspace.commitFilter.uncommitted",
-			message: "Uncommitted",
-		});
+		return i18n._(
+			msg({
+				message: "Uncommitted",
+			}),
+		);
 	if (filter.kind === "range") {
 		const from = commits.find((c) => c.hash === filter.fromHash);
 		const to = commits.find((c) => c.hash === filter.toHash);
@@ -69,9 +72,7 @@ export function CommitFilterDropdown({
 					<DropdownMenuItem onSelect={() => onFilterChange({ kind: "all" })}>
 						<div className="flex flex-1 items-center justify-between">
 							<span>
-								<Trans id="workspace.commitFilter.allChanges">
-									All changes
-								</Trans>
+								<Trans>All changes</Trans>
 							</span>
 							{filter.kind === "all" && <Check className="size-3.5" />}
 						</div>
@@ -83,14 +84,11 @@ export function CommitFilterDropdown({
 						<div className="flex flex-1 items-center justify-between">
 							<div>
 								<div>
-									<Trans id="workspace.commitFilter.uncommittedChanges">
-										Uncommitted changes
-									</Trans>
+									<Trans>Uncommitted changes</Trans>
 								</div>
 								{uncommittedCount != null && (
 									<div className="text-[10px] text-muted-foreground">
 										<Plural
-											id="workspace.commitFilter.filesChangedCount"
 											value={uncommittedCount}
 											one="# file changed"
 											other="# files changed"
@@ -108,9 +106,7 @@ export function CommitFilterDropdown({
 								<div className="flex items-center gap-2">
 									<ListFilter className="size-3.5 text-muted-foreground" />
 									<span>
-										<Trans id="workspace.commitFilter.selectRange">
-											Select range...
-										</Trans>
+										<Trans>Select range...</Trans>
 									</span>
 								</div>
 								{filter.kind === "range" && <Check className="size-3.5" />}

@@ -95,7 +95,6 @@ export const FileRow = memo(function FileRow({
 		onError: (err) => {
 			toast.error(
 				t({
-					id: "workspace.fileRow.discardFailed",
 					message: "Couldn't discard changes",
 				}),
 				{
@@ -166,7 +165,6 @@ export const FileRow = memo(function FileRow({
 							<button
 								type="button"
 								aria-label={t({
-									id: "workspace.fileRow.discardChangesAria",
 									message: "Discard changes",
 								})}
 								className="flex size-5 items-center justify-center rounded text-muted-foreground hover:bg-accent hover:text-destructive"
@@ -179,9 +177,7 @@ export const FileRow = memo(function FileRow({
 							</button>
 						</TooltipTrigger>
 						<TooltipContent side="top">
-							<Trans id="workspace.fileRow.discardChangesTooltip">
-								Discard changes
-							</Trans>
+							<Trans>Discard changes</Trans>
 						</TooltipContent>
 					</Tooltip>
 				)}
@@ -190,7 +186,6 @@ export const FileRow = memo(function FileRow({
 						<button
 							type="button"
 							aria-label={t({
-								id: "workspace.fileRow.moreActionsAria",
 								message: "More actions",
 							})}
 							className="flex size-5 items-center justify-center rounded text-muted-foreground hover:bg-accent hover:text-foreground data-[state=open]:bg-accent data-[state=open]:text-foreground"
@@ -204,15 +199,13 @@ export const FileRow = memo(function FileRow({
 							onSelect={() => onSelect?.(file.path, false, changeKey)}
 						>
 							<GitCompare />
-							<Trans id="workspace.fileRow.menuOpenDiff">Open Diff</Trans>
+							<Trans>Open Diff</Trans>
 						</DropdownMenuItem>
 						<DropdownMenuItem
 							onSelect={() => onSelect?.(file.path, true, changeKey)}
 						>
 							<SquarePlus />
-							<Trans id="workspace.fileRow.menuOpenDiffNewTab">
-								Open Diff in New Tab
-							</Trans>
+							<Trans>Open Diff in New Tab</Trans>
 							{diffNewTabTier && (
 								<DropdownMenuShortcut>
 									{modifierLabel(diffNewTabTier)}
@@ -224,7 +217,7 @@ export const FileRow = memo(function FileRow({
 							disabled={!onOpenFile || !absolutePath}
 						>
 							<FileText />
-							<Trans id="workspace.fileRow.menuOpenFile">Open File</Trans>
+							<Trans>Open File</Trans>
 							{fileTier && (
 								<DropdownMenuShortcut>
 									{modifierLabel(fileTier)}
@@ -236,18 +229,14 @@ export const FileRow = memo(function FileRow({
 							disabled={!onOpenFile || !absolutePath}
 						>
 							<SquarePlus />
-							<Trans id="workspace.fileRow.menuOpenFileNewTab">
-								Open File in New Tab
-							</Trans>
+							<Trans>Open File in New Tab</Trans>
 						</DropdownMenuItem>
 						<DropdownMenuItem
 							onSelect={() => onOpenInEditor?.(file.path)}
 							disabled={!onOpenInEditor}
 						>
 							<ExternalLink />
-							<Trans id="workspace.fileRow.menuOpenInEditor">
-								Open in Editor
-							</Trans>
+							<Trans>Open in Editor</Trans>
 							{externalTier && (
 								<DropdownMenuShortcut>
 									{modifierLabel(externalTier)}
@@ -273,15 +262,13 @@ export const FileRow = memo(function FileRow({
 					onSelect={() => onSelect?.(file.path, false, changeKey)}
 				>
 					<GitCompare />
-					<Trans id="workspace.fileRow.contextOpenDiff">Open Diff</Trans>
+					<Trans>Open Diff</Trans>
 				</ContextMenuItem>
 				<ContextMenuItem
 					onSelect={() => onSelect?.(file.path, true, changeKey)}
 				>
 					<SquarePlus />
-					<Trans id="workspace.fileRow.contextOpenDiffNewTab">
-						Open Diff in New Tab
-					</Trans>
+					<Trans>Open Diff in New Tab</Trans>
 					{diffNewTabTier && (
 						<ContextMenuShortcut>
 							{modifierLabel(diffNewTabTier)}
@@ -293,7 +280,7 @@ export const FileRow = memo(function FileRow({
 					disabled={!onOpenFile || !absolutePath}
 				>
 					<FileText />
-					<Trans id="workspace.fileRow.contextOpenFile">Open File</Trans>
+					<Trans>Open File</Trans>
 					{fileTier && (
 						<ContextMenuShortcut>{modifierLabel(fileTier)}</ContextMenuShortcut>
 					)}
@@ -303,18 +290,14 @@ export const FileRow = memo(function FileRow({
 					disabled={!onOpenFile || !absolutePath}
 				>
 					<SquarePlus />
-					<Trans id="workspace.fileRow.contextOpenFileNewTab">
-						Open File in New Tab
-					</Trans>
+					<Trans>Open File in New Tab</Trans>
 				</ContextMenuItem>
 				<ContextMenuItem
 					onSelect={() => onOpenInEditor?.(file.path)}
 					disabled={!onOpenInEditor}
 				>
 					<ExternalLink />
-					<Trans id="workspace.fileRow.contextOpenInEditor">
-						Open in Editor
-					</Trans>
+					<Trans>Open in Editor</Trans>
 					{externalTier && (
 						<ContextMenuShortcut>
 							{modifierLabel(externalTier)}
@@ -339,9 +322,8 @@ export const FileRow = memo(function FileRow({
 						>
 							{isDeleteAction ? <Trash2 /> : <Undo2 />}
 							{isDeleteAction
-								? t({ id: "workspace.fileRow.menuDelete", message: "Delete" })
+								? t({ message: "Delete" })
 								: t({
-										id: "workspace.fileRow.menuDiscardChanges",
 										message: "Discard changes",
 									})}
 						</ContextMenuItem>
@@ -354,23 +336,19 @@ export const FileRow = memo(function FileRow({
 				title={
 					isDeleteAction
 						? t({
-								id: "workspace.fileRow.deleteConfirmTitle",
 								message: `Delete "${basename}"?`,
 							})
 						: t({
-								id: "workspace.fileRow.discardConfirmTitle",
 								message: `Discard changes to "${basename}"?`,
 							})
 				}
 				description={
 					isDeleteAction
 						? t({
-								id: "workspace.fileRow.deleteConfirmBody",
 								message:
 									"This will permanently delete this file. This action cannot be undone.",
 							})
 						: t({
-								id: "workspace.fileRow.discardConfirmBody",
 								message:
 									"This will revert all changes to this file. This action cannot be undone.",
 							})
@@ -378,11 +356,9 @@ export const FileRow = memo(function FileRow({
 				confirmLabel={
 					isDeleteAction
 						? t({
-								id: "workspace.fileRow.deleteConfirmAction",
 								message: "Delete",
 							})
 						: t({
-								id: "workspace.fileRow.discardConfirmAction",
 								message: "Discard",
 							})
 				}

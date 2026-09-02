@@ -76,7 +76,7 @@ export function ChangesHeader({
 					{/* Selector as a placeholder in the message: a bare "from"
 					    cannot precede the branch in every language — Korean puts
 					    the postposition after it. */}
-					<Trans id="workspace.changesHeader.fromBase">
+					<Trans>
 						<span className="shrink-0 text-muted-foreground/60">from</span>{" "}
 						<BaseBranchSelector
 							branches={branches}

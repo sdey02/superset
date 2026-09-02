@@ -372,7 +372,6 @@ export function DashboardSidebar({
 												<button
 													type="button"
 													aria-label={t({
-														id: "dashboard.sidebar.settingsAriaLabel",
 														message: "Settings",
 													})}
 													onClick={() => navigate({ to: "/settings/account" })}
@@ -389,11 +388,9 @@ export function DashboardSidebar({
 											<TooltipContent side={isCollapsed ? "right" : "top"}>
 												{settingsHotkey !== "Unassigned"
 													? t({
-															id: "dashboard.sidebar.settingsTooltipWithHotkey",
 															message: `Settings (${settingsHotkey})`,
 														})
 													: t({
-															id: "dashboard.sidebar.settingsTooltip",
 															message: "Settings",
 														})}
 											</TooltipContent>

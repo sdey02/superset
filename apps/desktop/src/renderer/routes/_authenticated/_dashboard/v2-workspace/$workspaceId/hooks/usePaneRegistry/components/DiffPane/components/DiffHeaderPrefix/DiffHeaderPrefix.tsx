@@ -44,11 +44,9 @@ export function DiffHeaderPrefix({
 				aria-label={
 					collapsed
 						? t({
-								id: "workspace.diffPane.expandFileAria",
 								message: "Expand file",
 							})
 						: t({
-								id: "workspace.diffPane.collapseFileAria",
 								message: "Collapse file",
 							})
 				}

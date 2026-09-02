@@ -32,12 +32,10 @@ export function LeaderboardPrompt({ hostUrl }: { hostUrl: string | null }) {
 				<TrophyIcon className="size-4 mt-0.5 shrink-0 text-muted-foreground" />
 				<div className="flex-1 min-w-0">
 					<p className="text-sm font-medium">
-						<Trans id="settings.usage.leaderboardPrompt.title">
-							Compare this with everyone else
-						</Trans>
+						<Trans>Compare this with everyone else</Trans>
 					</p>
 					<p className="text-xs text-muted-foreground mt-0.5">
-						<Trans id="settings.usage.leaderboardPrompt.body">
+						<Trans>
 							Publish token counts and model names to the public leaderboard. No
 							repo names, file paths or prompts. Leave any time.
 						</Trans>
@@ -45,15 +43,12 @@ export function LeaderboardPrompt({ hostUrl }: { hostUrl: string | null }) {
 				</div>
 				<div className="flex items-center gap-1 shrink-0">
 					<Button size="sm" variant="outline" onClick={openJoin}>
-						<Trans id="settings.usage.leaderboardPrompt.seeMyRank">
-							See my rank
-						</Trans>
+						<Trans>See my rank</Trans>
 					</Button>
 					<Button
 						size="sm"
 						variant="ghost"
 						aria-label={t({
-							id: "settings.usage.leaderboardPrompt.dismiss",
 							message: "Dismiss",
 						})}
 						onClick={() => setDismissed(true)}

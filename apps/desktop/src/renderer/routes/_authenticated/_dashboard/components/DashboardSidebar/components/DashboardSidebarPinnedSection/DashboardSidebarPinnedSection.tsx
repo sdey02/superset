@@ -70,7 +70,7 @@ export function DashboardSidebarPinnedSection({
 	return (
 		<div className="mt-3 pb-1 first:mt-0">
 			<DashboardSidebarSectionHeader
-				label={t({ id: "dashboard.sidebar.sectionPinned", message: "Pinned" })}
+				label={t({ message: "Pinned" })}
 				section="pinned"
 			/>
 			{!isSectionCollapsed && (
@@ -108,7 +108,6 @@ export function DashboardSidebarPinnedSection({
 				<SidebarDropZone
 					dropZoneId={dropZoneId(PINNED_CONTAINER)}
 					label={t({
-						id: "dashboard.sidebar.pinnedSection.dropToPin",
 						message: "Drop to pin",
 					})}
 				/>

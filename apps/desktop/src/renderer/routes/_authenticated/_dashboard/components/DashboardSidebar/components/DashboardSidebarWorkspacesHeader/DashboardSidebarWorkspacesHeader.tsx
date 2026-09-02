@@ -32,7 +32,6 @@ export function DashboardSidebarWorkspacesHeader() {
 		onError: (message) => {
 			toast.error(
 				t({
-					id: "dashboard.sidebar.workspacesHeader.importFailed",
 					message: `Import failed: ${message}`,
 				}),
 			);
@@ -40,17 +39,14 @@ export function DashboardSidebarWorkspacesHeader() {
 		onMultipleProjects: ({ candidates }) => {
 			toast.error(
 				t({
-					id: "dashboard.sidebar.workspacesHeader.importFailedTitle",
 					message: "Import failed",
 				}),
 				{
 					description: t({
-						id: "dashboard.sidebar.workspacesHeader.importMultipleProjects",
 						message: `Multiple projects use this repository (${candidates.length}). Choose the project in settings to set it up on this device.`,
 					}),
 					action: {
 						label: t({
-							id: "dashboard.sidebar.workspacesHeader.openProjectsAction",
 							message: "Open Projects",
 						}),
 						onClick: () => navigate({ to: "/settings/projects" }),
@@ -65,7 +61,6 @@ export function DashboardSidebarWorkspacesHeader() {
 		if (result) {
 			toast.success(
 				t({
-					id: "dashboard.sidebar.workspacesHeader.projectReady",
 					message: "Project ready — open it from the sidebar.",
 				}),
 			);
@@ -75,7 +70,6 @@ export function DashboardSidebarWorkspacesHeader() {
 	return (
 		<DashboardSidebarSectionHeader
 			label={t({
-				id: "dashboard.sidebar.sectionProjects",
 				message: "Projects",
 			})}
 			section="workspaces"
@@ -87,7 +81,6 @@ export function DashboardSidebarWorkspacesHeader() {
 							<button
 								type="button"
 								aria-label={t({
-									id: "dashboard.sidebar.workspacesHeader.addProjectAriaLabel",
 									message: "Add project",
 								})}
 								onClick={(event) => event.stopPropagation()}
@@ -100,9 +93,7 @@ export function DashboardSidebarWorkspacesHeader() {
 						</DropdownMenuTrigger>
 					</TooltipTrigger>
 					<TooltipContent side="bottom">
-						<Trans id="dashboard.sidebar.workspacesHeader.addProject">
-							Add project
-						</Trans>
+						<Trans>Add project</Trans>
 					</TooltipContent>
 				</Tooltip>
 				<DropdownMenuContent
@@ -116,27 +107,19 @@ export function DashboardSidebarWorkspacesHeader() {
 				>
 					<DropdownMenuItem onSelect={handleImportFolder}>
 						<VscFolderOpened className="size-4" />
-						<Trans id="dashboard.sidebar.workspacesHeader.openProject">
-							Open project
-						</Trans>
+						<Trans>Open project</Trans>
 					</DropdownMenuItem>
 					<DropdownMenuItem onSelect={() => openNewProject()}>
 						<VscGithubAlt className="size-4" />
-						<Trans id="dashboard.sidebar.workspacesHeader.cloneFromUrl">
-							Clone from URL
-						</Trans>
+						<Trans>Clone from URL</Trans>
 					</DropdownMenuItem>
 					<DropdownMenuItem onSelect={() => openEmptyProject()}>
 						<VscNewFolder className="size-4" />
-						<Trans id="dashboard.sidebar.workspacesHeader.createNewProject">
-							Create new project
-						</Trans>
+						<Trans>Create new project</Trans>
 					</DropdownMenuItem>
 					<DropdownMenuItem onSelect={() => openTemplateGallery()}>
 						<VscLayout className="size-4" />
-						<Trans id="dashboard.sidebar.workspacesHeader.startFromTemplate">
-							Start from a template
-						</Trans>
+						<Trans>Start from a template</Trans>
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>

@@ -1,3 +1,4 @@
+import { msg } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { i18n } from "@superset/i18n";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
@@ -75,7 +76,6 @@ function ActionSlot({
 				<UnavailableIcon
 					reason="create-disabled"
 					tooltip={t({
-						id: "workspace.prActionHeader.createPrComingSoon",
 						message: "Create PR coming soon",
 					})}
 				/>
@@ -99,7 +99,6 @@ function ActionSlot({
 					type="button"
 					onClick={onRetry}
 					aria-label={t({
-						id: "workspace.prActionHeader.retryLoadingPr",
 						message: "Retry loading pull request",
 					})}
 					className="flex items-center text-muted-foreground/60 transition-colors hover:text-muted-foreground"
@@ -135,24 +134,28 @@ function unavailableTooltip(
 ): string {
 	switch (reason) {
 		case "no-repo":
-			return i18n._({
-				id: "workspace.prActionHeader.noRepoTooltip",
-				message: "No GitHub repository connected",
-			});
+			return i18n._(
+				msg({
+					message: "No GitHub repository connected",
+				}),
+			);
 		case "default-branch":
-			return i18n._({
-				id: "workspace.prActionHeader.defaultBranchTooltip",
-				message: "Switch to a feature branch to create a pull request",
-			});
+			return i18n._(
+				msg({
+					message: "Switch to a feature branch to create a pull request",
+				}),
+			);
 		case "detached-head":
-			return i18n._({
-				id: "workspace.prActionHeader.detachedHeadTooltip",
-				message: "Checkout a branch to create a pull request",
-			});
+			return i18n._(
+				msg({
+					message: "Checkout a branch to create a pull request",
+				}),
+			);
 		case "create-disabled":
-			return i18n._({
-				id: "workspace.prActionHeader.createPrComingSoon",
-				message: "Create PR coming soon",
-			});
+			return i18n._(
+				msg({
+					message: "Create PR coming soon",
+				}),
+			);
 	}
 }

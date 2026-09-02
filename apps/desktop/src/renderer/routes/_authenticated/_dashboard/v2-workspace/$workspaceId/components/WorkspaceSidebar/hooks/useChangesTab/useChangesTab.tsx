@@ -106,7 +106,6 @@ export function useChangesTab({
 			toast.error(
 				error.message ||
 					t({
-						id: "workspace.changesTab.changeBaseBranchFailed",
 						message: "Failed to change base branch",
 					}),
 			),
@@ -143,18 +142,15 @@ export function useChangesTab({
 				}),
 				{
 					loading: t({
-						id: "workspace.changesTab.renameBranchLoading",
 						message: `Renaming branch to ${newName}...`,
 					}),
 					success: t({
-						id: "workspace.changesTab.renameBranchSuccess",
 						message: `Branch renamed to ${newName}`,
 					}),
 					error: (err) =>
 						errorMessage(
 							err,
 							t({
-								id: "workspace.changesTab.renameBranchFailed",
 								message: "Failed to rename branch",
 							}),
 						),
@@ -185,7 +181,6 @@ export function useChangesTab({
 				errorMessage(
 					error,
 					t({
-						id: "workspace.changesTab.refreshFailed",
 						message: "Failed to refresh changes",
 					}),
 				),
@@ -223,7 +218,7 @@ export function useChangesTab({
 
 	return {
 		id: "changes",
-		label: t({ id: "workspace.changesTab.label", message: "Changes" }),
+		label: t({ message: "Changes" }),
 		badge: totalChanges > 0 ? totalChanges : undefined,
 		content,
 	};
