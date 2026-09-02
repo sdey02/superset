@@ -87,6 +87,7 @@ export function getHostWorkspacesQueryKey(
 /**
  * One target per known host: the local host always (direct URL), remote
  * hosts via relay when online, and a null-URL placeholder when offline.
+ * Plus, at most, the one sandbox behind the workspace that is open.
  */
 export function deriveHostWorkspacesQueryTargets({
 	activeHostUrl,
@@ -94,7 +95,7 @@ export function deriveHostWorkspacesQueryTargets({
 	machineId,
 	relayUrl,
 	fallbackOrganizationId,
-	sandboxes = [],
+	openSandbox = null,
 }: {
 	activeHostUrl: string | null;
 	hosts: HostRowForTargets[];
@@ -102,12 +103,16 @@ export function deriveHostWorkspacesQueryTargets({
 	relayUrl: string;
 	/** Org for the synthesized local target — see derivePullRequestQueryTargets. */
 	fallbackOrganizationId?: string | null;
-	/** Cloud workspaces whose sandbox currently has a brokered address. */
-	sandboxes?: Array<{
+	/**
+	 * The sandbox behind the open cloud workspace, once it has a brokered
+	 * address. Never the whole cloud list: the provider counts every request
+	 * as activity, so a sandbox in the fan-out is a sandbox that never sleeps.
+	 */
+	openSandbox?: {
 		workspaceId: string;
 		organizationId: string;
 		url: string;
-	}>;
+	} | null;
 }): HostWorkspacesQueryTarget[] {
 	const targets: HostWorkspacesQueryTarget[] = hosts.map((host) => {
 		const isLocal = host.machineId === machineId;
@@ -139,11 +144,11 @@ export function deriveHostWorkspacesQueryTargets({
 		});
 	}
 
-	for (const sandbox of sandboxes) {
+	if (openSandbox) {
 		targets.push({
-			machineId: sandbox.workspaceId,
-			organizationId: sandbox.organizationId,
-			hostUrl: sandbox.url,
+			machineId: openSandbox.workspaceId,
+			organizationId: openSandbox.organizationId,
+			hostUrl: openSandbox.url,
 			isLocal: false,
 			isSandbox: true,
 		});

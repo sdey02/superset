@@ -65,7 +65,8 @@ function V2WorkspaceLayout() {
 				: null,
 		[hostWorkspaces, workspaceId],
 	);
-	// A sandbox joins the fan-out as its own host, so a cloud workspace is
+	// The open workspace's sandbox joins the fan-out as its own host (and only
+	// the open one: polled, a sandbox never sleeps), so a cloud workspace is
 	// found the same way as any other — but it has no v2_hosts row for the
 	// remote version gate to check.
 	const { targets: sandboxes } = useSandboxAccess();
