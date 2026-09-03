@@ -27,7 +27,8 @@ shared `i18n` instance, one locale list. Strategy and phasing:
   and `precompile:app` (the release workflow calls `compile:app` directly after
   an `--ignore-scripts` install); the Next apps in `prebuild` (`vercel build`
   runs `bun run build`); mobile in `predev`, `preios`, `preandroid` and the
-  `eas-build-post-install` hook. Root `postinstall` also builds them, turbo's
+  `eas-build-post-install` hook; the CLI in `prebuild` and `prebuild:dist`
+  (`build-cli.yml` installs Linux deps with `--ignore-scripts`). Root `postinstall` also builds them, turbo's
   `build`/`typecheck`/`test`/`dev` tasks depend on `@superset/i18n#build`, and
   the turbo cache restores them. Only the `.po` files are committed. (A
   committed `messages.ts` is one line per locale, so any two PRs that each
