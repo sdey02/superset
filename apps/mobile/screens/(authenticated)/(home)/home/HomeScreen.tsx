@@ -123,10 +123,8 @@ export function HomeScreen() {
 		isReady: cloudReady,
 	} = useCloudWorkspaceItems();
 	const cloudScope = useWorkspaceScope() === "cloud";
-	// Cloud rows get no session marks from the list: the terminal fan-out is
-	// one request per sandbox, and the provider counts every request as
-	// activity, so decorating the list would keep every sandbox awake for as
-	// long as Home is on screen. A sandbox's terminals show once it is opened.
+	// No session marks for cloud rows: a request per sandbox keeps each one
+	// awake for as long as Home is on screen.
 	const terminalHosts = useMemo<TerminalsHost[]>(
 		() => (cloudScope || !selectedHost ? [] : [selectedHost]),
 		[selectedHost, cloudScope],

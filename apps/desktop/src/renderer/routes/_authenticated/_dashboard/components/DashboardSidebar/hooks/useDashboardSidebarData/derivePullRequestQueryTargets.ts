@@ -103,8 +103,6 @@ export function derivePullRequestQueryTargets({
 		}
 	}
 
-	// Cloud workspaces never get a target: their sandbox is not a host row, and
-	// asking it every ten seconds is what kept every sandbox awake all day.
 	return targets;
 }
 

@@ -25,10 +25,9 @@ import { DashboardSidebarWorkspaceItem } from "../DashboardSidebarWorkspaceItem"
  *
  * The cloud row owns the workspace's identity — it is what created, named and
  * lists it. The row inside the sandbox exists only so host-service has
- * something to serve panes against, so its name is ignored here. Its branch
- * is read only for the workspace that is open (the only sandbox the fan-out
- * addresses); every other row shows the branch it was created on. Pull
- * requests come from the cloud table, since asking a sandbox would wake it.
+ * something to serve panes against, so its name is ignored here. Only the
+ * open workspace's sandbox is in the fan-out, so every other row shows the
+ * branch it was created on; pull requests come from the cloud table.
  */
 export function DashboardSidebarCloudSection({
 	isCollapsed,
@@ -63,8 +62,7 @@ export function DashboardSidebarCloudSection({
 		[collections],
 	);
 
-	// Every cloud workspace clones the one cloud repository, so that is the
-	// repository every row's branch is matched against.
+	// Every cloud workspace clones the one cloud repository.
 	const organizationId = useActiveOrganizationId();
 	const { data: cloudRepo } = cloudTrpc.cloudWorkspace.repo.useQuery(
 		{ organizationId: organizationId ?? "" },

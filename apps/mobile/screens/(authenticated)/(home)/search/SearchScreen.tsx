@@ -56,8 +56,7 @@ export function SearchScreen() {
 	const pinnedAt = usePinnedWorkspacesStore((state) => state.pinnedAt);
 
 	// Same hosts the home list polls, so the query keys are shared and the
-	// sheet decorates from cache instead of paying its own fan-out. Sandboxes
-	// are never among them: a request per sandbox keeps each one awake.
+	// sheet decorates from cache instead of paying its own fan-out.
 	const terminalHosts = useMemo<TerminalsHost[]>(
 		() => (cloudScope || !selectedHost ? [] : [selectedHost]),
 		[selectedHost, cloudScope],

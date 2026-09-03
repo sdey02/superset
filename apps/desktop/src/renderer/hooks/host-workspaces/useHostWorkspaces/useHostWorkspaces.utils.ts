@@ -103,11 +103,7 @@ export function deriveHostWorkspacesQueryTargets({
 	relayUrl: string;
 	/** Org for the synthesized local target — see derivePullRequestQueryTargets. */
 	fallbackOrganizationId?: string | null;
-	/**
-	 * The sandbox behind the open cloud workspace, once it has a brokered
-	 * address. Never the whole cloud list: the provider counts every request
-	 * as activity, so a sandbox in the fan-out is a sandbox that never sleeps.
-	 */
+	/** The open cloud workspace's sandbox — never the whole cloud list, see useHostWorkspacesSource. */
 	openSandbox?: {
 		workspaceId: string;
 		organizationId: string;

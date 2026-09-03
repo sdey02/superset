@@ -146,9 +146,8 @@ export const workspaceLocalStateSchema = z.object({
 		// Epoch ms when the user pinned this workspace to the sidebar's Pinned
 		// section; null = not pinned. Ordering is pinnedAt ascending.
 		pinnedAt: z.number().int().nullable().default(null),
-		// "Remove PR link" for a chip sourced from the cloud pull-request table:
-		// that PR stays hidden on this row, a different PR still shows. The
-		// host keeps its own copy of the same decision for the views it serves.
+		// "Remove PR link" for cloud-sourced chips: that PR stays hidden, a
+		// different PR still shows.
 		suppressedPullRequestUrl: z.string().nullable().default(null),
 	}),
 	paneLayout: paneWorkspaceStateSchema,

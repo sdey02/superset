@@ -20,21 +20,15 @@ export interface CloudWorkspaceItem extends HostWorkspaceItem {
 }
 
 /**
- * A cloud row rendered as a list item. The cloud row is the workspace's
- * identity (it is what created, named and lists it) and carries the branch it
- * was created on; the sandbox's own row is only consulted once the workspace
- * is opened (useWorkspaceHost), never from the list — the provider counts
- * every request as activity, so a list that asked each sandbox for its row
- * kept all of them awake for as long as Home was on screen.
+ * A cloud row as a list item, without asking its sandbox (a request per
+ * sandbox kept every one of them awake while Home was on screen); the served
+ * row is read only by the workspace screen (useWorkspaceHost).
  *
- * Two fields are invented, and both are load bearing only in what they
- * prevent: `worktreeExists: true` keeps the list from filtering the row as a
- * stale shell, and `worktreePath: ""` satisfies the shape — nothing reads a
- * path off a list row (the workspace screen's attachment target uses the
- * served row, which has the real one). `type` is not invented: the sandbox
- * self-seeds its workspace as `main`. `hostReachable` is false because the
- * list never asks; row decoration that needs the host (diff stats) waits for
- * the workspace to be opened.
+ * Two fields are invented: `worktreeExists: true` keeps the list from
+ * filtering the row as a stale shell, and `worktreePath: ""` satisfies the
+ * shape — nothing reads a path off a list row. `type` is not invented: the
+ * sandbox self-seeds its workspace as `main`. `hostReachable` is false so
+ * decoration that needs the host (diff stats) waits for the workspace to open.
  */
 function itemFromCloudRow(cloud: CloudWorkspaceRow): CloudWorkspaceItem {
 	return {
@@ -69,11 +63,7 @@ export interface CloudWorkspaceItemsValue {
 	isReady: boolean;
 }
 
-/**
- * Cloud workspaces as home-list rows, from the cloud list alone. Addresses
- * are still brokered for every ready sandbox (that talks to the API, not the
- * sandbox) so opening a row resolves its host at once.
- */
+/** Cloud workspaces as home-list rows. Addresses are brokered via the API, never the sandbox. */
 export function useCloudWorkspaceItems(): CloudWorkspaceItemsValue {
 	const queryClient = useQueryClient();
 	const { workspaces: cloudRows, isReady: listReady } = useCloudWorkspaces();

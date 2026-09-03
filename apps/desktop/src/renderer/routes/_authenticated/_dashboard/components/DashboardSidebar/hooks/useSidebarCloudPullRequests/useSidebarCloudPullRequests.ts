@@ -26,19 +26,13 @@ export interface SidebarCloudPullRequests {
 	refetch: () => Promise<unknown>;
 }
 
-/**
- * Sidebar pull-request chips from the cloud `github_pull_requests` table,
- * fed by the App's webhooks. One request for every row on screen instead of
- * one poll per host — and, for a cloud workspace, the only source there is:
- * asking its sandbox would wake it.
- */
+/** Sidebar chips from the cloud `github_pull_requests` table: one request for every row on screen. */
 export function useSidebarCloudPullRequests(
 	refs: CloudPullRequestRef[],
 ): SidebarCloudPullRequests {
 	const organizationId = useActiveOrganizationId();
 
-	// Deduplicated and sorted so the query input (and so its key) only changes
-	// when the set of rows actually changes, not on every rebuild of the list.
+	// Deduplicated and sorted so the query key only changes with the set of rows.
 	const stableRefs = useMemo(() => {
 		const byKey = new Map<string, CloudPullRequestRef>();
 		for (const ref of refs) {

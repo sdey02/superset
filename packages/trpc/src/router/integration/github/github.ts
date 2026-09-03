@@ -181,14 +181,10 @@ export const githubRouter = {
 		}),
 
 	/**
-	 * The pull request to show for each (repository, head branch) pair — what
-	 * a sidebar row needs and nothing more. One PR per ref: an open one wins,
-	 * otherwise the most recently updated. Repositories are matched by full
-	 * name within the organization's installation, so a ref for a repository
-	 * the App is not installed on simply has no entry.
-	 *
-	 * `hasInstallation` lets a client that has its own PR source (a host it
-	 * can reach) decide whether to fall back to it.
+	 * One pull request per (repository, head branch) ref for sidebar chips:
+	 * an open one wins, else the most recently updated. A repository the App
+	 * is not installed on has no entry; `hasInstallation` lets a client fall
+	 * back to a host it can reach.
 	 */
 	getByBranches: protectedProcedure
 		.input(
@@ -235,10 +231,8 @@ export const githubRouter = {
 			for (const ref of input.refs) {
 				const repo = repoByFullName.get(ref.repoFullName.toLowerCase());
 				if (!repo) continue;
-				// The table records a PR's head branch but not the repository it
-				// lives in, so a fork's `main` is indistinguishable from this one's.
-				// A checkout of the default branch has no PR of its own, and would
-				// otherwise pick up whichever fork last opened one from theirs.
+				// The table has no head-repository owner, so a fork's `main` would
+				// match a checkout of this repository's default branch.
 				if (ref.headBranch === repo.defaultBranch) continue;
 				wanted.add(`${repo.id}\n${ref.headBranch}`);
 				repoIds.add(repo.id);

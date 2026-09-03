@@ -290,9 +290,7 @@ export function useDashboardSidebarWorkspaceItemActions({
 	};
 
 	const handleRemovePullRequest = async () => {
-		// The chip is sourced from the cloud table, so the decision lives in
-		// local sidebar state and takes effect at once. The host keeps its own
-		// copy for the views it serves, when it can be reached.
+		// Local state hides the chip at once; the host keeps its own copy when reachable.
 		if (pullRequestUrl) {
 			setWorkspaceSuppressedPullRequest(workspaceId, projectId, pullRequestUrl);
 		}

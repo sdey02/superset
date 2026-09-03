@@ -975,11 +975,7 @@ export function useDashboardSidebarState() {
 		[collections, hostWorkspaces, tagFolderContext],
 	);
 
-	/**
-	 * "Remove PR link" for a chip sourced from the cloud table. Null clears
-	 * it. A row without local state (an auto-included main) gets one, the way
-	 * pinning does — the decision has to live somewhere.
-	 */
+	// A row without local state (an auto-included main) gets one, as pinning does.
 	const setWorkspaceSuppressedPullRequest = useCallback(
 		(
 			workspaceId: string,

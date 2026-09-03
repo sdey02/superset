@@ -21,9 +21,7 @@ const SANDBOX_REFETCH_INTERVAL_MS = 30_000;
 /**
  * The row a sandbox serves for its own workspace, restated under the cloud
  * workspace's id: the sandbox reports the machine id of the container it
- * happens to run in, which addresses nothing from here. Only the open
- * workspace asks — the provider counts every request as activity, so a list
- * that polled each sandbox kept all of them awake.
+ * happens to run in, which addresses nothing from here.
  */
 function sandboxWorkspacesQuery(target: SandboxTarget) {
 	return {

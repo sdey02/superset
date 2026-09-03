@@ -110,12 +110,10 @@ export function useHostWorkspacesSource(
 	const { targets: sandboxes, isReady: sandboxesReady } = useSandboxAccess();
 
 	// Only the open workspace's sandbox is a host here. The provider suspends a
-	// sandbox after a few seconds without an inbound request and counts this
-	// hook's poll as one, so every sandbox in the fan-out is a sandbox kept
-	// awake — and billed — for as long as the app is open. Nothing in the
-	// sidebar needs a sandbox's served row (the cloud row carries name and
-	// branch; a sandbox's rows only add live git state for the one workspace
-	// someone is inside), so the route param is the whole "open" signal.
+	// sandbox after ~15s without an inbound request and this poll counts as
+	// one, so every sandbox in the fan-out is one kept awake (and billed) for
+	// as long as the app is open. The sidebar renders cloud rows from the cloud
+	// row, so nothing else needs a sandbox's served rows.
 	const { workspaceId: openWorkspaceId } = useParams({ strict: false });
 	const openSandbox = useMemo(
 		() =>
@@ -241,10 +239,8 @@ export function useHostWorkspacesSource(
 	// Live updates: each reachable host's workspace:changed patches its own
 	// cached list without a refetch.
 	//
-	// Not for the sandbox either. It is only a target while its workspace is
-	// open, and then the workspace's own subscribers hold a socket to it
-	// anyway; a second one here would only duplicate them. The 30s poll
-	// covers its single row.
+	// Not for the sandbox: while its workspace is open, the workspace's own
+	// subscribers already hold a socket to it, and the poll covers its one row.
 	useEffect(() => {
 		const cleanups: Array<() => void> = [];
 		for (const target of targets) {

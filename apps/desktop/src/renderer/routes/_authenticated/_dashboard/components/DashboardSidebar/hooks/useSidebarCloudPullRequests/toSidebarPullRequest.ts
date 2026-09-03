@@ -51,11 +51,7 @@ function toChecksStatus(
 		: "none";
 }
 
-/**
- * The cloud table's row, in the shape the sidebar chip already renders from
- * the host. The host knows a fifth state, `queued` (merge queue), which the
- * webhooks do not carry; a queued PR shows as open here.
- */
+/** The host's chip shape; `queued` (merge queue) is host-only, so it shows as open here. */
 export function toSidebarPullRequest(
 	row: CloudPullRequestRow,
 ): DashboardSidebarWorkspacePullRequest {
