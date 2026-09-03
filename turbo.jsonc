@@ -55,6 +55,9 @@
 			"outputs": ["coverage/**"]
 		},
 		"build:types": {
+			// tsc walks into @superset/i18n through @superset/shared, and its
+			// compiled catalogs only exist once @superset/i18n#build has run.
+			"dependsOn": ["^build"],
 			"outputs": ["dist-types/**"]
 		},
 		"typecheck": {
