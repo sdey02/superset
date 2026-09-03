@@ -135,16 +135,20 @@ export function useTerminalHandoffBrief(input: {
 				}
 			}
 			const cached = attempts.get(key);
-			if (
+			const resumable =
 				bindingLive &&
 				cached &&
 				!cached.resolved &&
-				cached.bindingStartedAt === bindingStartedAt &&
-				isBriefAttemptFresh(cached.startedAt, Date.now())
-			) {
+				cached.bindingStartedAt === (bindingStartedAt ?? 0) &&
+				isBriefAttemptFresh(cached.startedAt, Date.now());
+			if (resumable) {
 				// Continue the same attempt: same nonce, original start time.
 				dispatch({ type: "start", nonce: cached.nonce, now: cached.startedAt });
 			} else {
+				// Clear any finished state now, before the awaits below. A
+				// ready brief from a replaced agent session must not stay
+				// launchable while the new attempt is set up.
+				dispatch({ type: "reset" });
 				let hasRunningProcess = false;
 				if (bindingLive) {
 					try {

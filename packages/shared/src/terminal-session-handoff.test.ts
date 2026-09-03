@@ -235,6 +235,11 @@ describe("extractTerminalHandoffBrief", () => {
 		expect(extractTerminalHandoffBrief(transcript, nonce)).toBe("line one");
 	});
 
+	it("drops whitespace-only boundary lines with their padding", () => {
+		const transcript = `${open}\n   \nline one\n\t\n${close}`;
+		expect(extractTerminalHandoffBrief(transcript, nonce)).toBe("line one");
+	});
+
 	it("bounds oversized briefs from the head, so the first sections survive", () => {
 		const oversized = `${brief}\n${"x".repeat(TERMINAL_HANDOFF_BRIEF_MAX_CHARS)}`;
 		const extracted = extractTerminalHandoffBrief(

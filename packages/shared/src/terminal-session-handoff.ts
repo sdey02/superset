@@ -261,6 +261,7 @@ const BRIEF_TRUNCATION_NOTICE = "\n[later output omitted]";
  * `boundTranscriptText`.
  */
 function boundBriefText(text: string, maxChars: number): string {
+	if (maxChars <= 0) return "";
 	if (text.length <= maxChars) return text;
 	const budget = maxChars - BRIEF_TRUNCATION_NOTICE.length;
 	if (budget < 1) return text.slice(0, maxChars);
@@ -305,13 +306,14 @@ export function extractTerminalHandoffBrief(
 	if (!matched) return null;
 
 	// Keep the content lines as written. Only blank lines at the two
-	// boundaries go, so indentation and hard breaks stay in the brief.
+	// boundaries go, so indentation and hard breaks stay in the brief. A
+	// boundary line counts as blank when it holds only spaces and tabs.
 	const content = rawLines
 		.slice(matched.open + 1, matched.close)
 		.map((line) => stripEscapeSequences(line).replace(/\r$/, ""))
 		.join("\n")
-		.replace(/^\n+/, "")
-		.replace(/\n+$/, "");
+		.replace(/^([ \t]*\n)+/, "")
+		.replace(/(\n[ \t]*)+$/, "");
 	if (!content.trim()) return null;
 	return boundBriefText(content, maxChars);
 }
