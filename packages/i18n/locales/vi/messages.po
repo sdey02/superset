@@ -34820,6 +34820,34 @@ msgid "workspace.terminalPane.agentSessionIdMenuLabel"
 msgstr "ID phiên agent"
 
 #. js-lingui-explicit-id
+#. placeholder {0}: formatNumber(briefState.brief.length)
+#. placeholder {1}: formatNumber(estimateTokens(briefState.brief.length))
+#. placeholder {2}: selectedConfig.label
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefReadyDisclosure"
+msgstr "Gửi {0} ký tự của bản tóm tắt bàn giao của agent (khoảng {1} token) cho {2}."
+
+#. js-lingui-explicit-id
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefStillWriting"
+msgstr "Vẫn đang viết bản tóm tắt…"
+
+#. js-lingui-explicit-id
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefUnavailable"
+msgstr "{sourceAgentLabel} không trả lời kịp — Superset sẽ gửi bản ghi phiên terminal thay thế."
+
+#. js-lingui-explicit-id
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefWaiting"
+msgstr "Đang yêu cầu {sourceAgentLabel} trong terminal này viết bản tóm tắt bàn giao…"
+
+#. js-lingui-explicit-id
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefWaitingFallbackNote"
+msgstr "Nếu không hoàn tất kịp, Superset sẽ gửi bản ghi phiên terminal thay thế."
+
+#. js-lingui-explicit-id
 #: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalConnectionIndicator/TerminalConnectionIndicator.tsx
 msgid "workspace.terminalPane.connectionAria"
 msgstr "Kết nối terminal: {label}"
@@ -34827,7 +34855,7 @@ msgstr "Kết nối terminal: {label}"
 #. js-lingui-explicit-id
 #. placeholder {0}: formatNumber(transcript.length)
 #. placeholder {1}: formatNumber(estimateTokens(transcript.length))
-#. placeholder {2}: selectedConfig.label
+#. placeholder {2}: selectedConfig?.label
 #: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
 msgid "workspace.terminalPane.contextDisclosureSized"
 msgstr "Gửi {0} ký tự ngữ cảnh terminal (khoảng {1} token) tới {2}."
@@ -34838,7 +34866,7 @@ msgid "workspace.terminalPane.contextEmpty"
 msgstr "Terminal này chưa có kết quả nào để bàn giao."
 
 #. js-lingui-explicit-id
-#. placeholder {0}: selectedConfig.label
+#. placeholder {0}: selectedConfig?.label
 #: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
 msgid "workspace.terminalPane.contextMeasuring"
 msgstr "Đang đo ngữ cảnh sẽ gửi tới {0}…"

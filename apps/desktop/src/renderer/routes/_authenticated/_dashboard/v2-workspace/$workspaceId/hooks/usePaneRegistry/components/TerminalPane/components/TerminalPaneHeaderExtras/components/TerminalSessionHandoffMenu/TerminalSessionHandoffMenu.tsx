@@ -1,6 +1,9 @@
 import { Trans, useLingui } from "@lingui/react/macro";
 import { formatNumber } from "@superset/i18n/format";
-import { buildTerminalSessionHandoffPrompt } from "@superset/shared/terminal-session-handoff";
+import {
+	buildTerminalSessionHandoffBriefPrompt,
+	buildTerminalSessionHandoffPrompt,
+} from "@superset/shared/terminal-session-handoff";
 import { Button } from "@superset/ui/button";
 import {
 	Dialog,
@@ -20,13 +23,15 @@ import { Label } from "@superset/ui/label";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@superset/ui/tooltip";
 import { workspaceTrpc } from "@superset/workspace-client";
 import { Bot, GitFork, PanelRight, SquareStack } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AgentSelect } from "renderer/components/AgentSelect";
 import { useTerminalAgentBinding } from "renderer/hooks/host-service/useTerminalAgentBindings";
 import { useWorkspaceHostUrl } from "renderer/hooks/host-service/useWorkspaceHostUrl";
 import { useV2AgentConfigs } from "renderer/hooks/useV2AgentConfigs";
 import { AGENT_STORAGE_KEY } from "renderer/routes/_authenticated/components/DashboardNewWorkspaceModal/components/DashboardNewWorkspaceForm/PromptGroup/types";
+import { briefContinueDeadline } from "./handoffBriefMachine";
 import { resolveDefaultTargetConfigId } from "./resolveDefaultTargetConfigId";
+import { useTerminalHandoffBrief } from "./useTerminalHandoffBrief";
 
 type Placement = "split-pane" | "new-tab";
 
@@ -67,6 +72,13 @@ export function TerminalSessionHandoffMenu({
 	const [isStarting, setIsStarting] = useState(false);
 	const [transcript, setTranscript] = useState<string | null>(null);
 	const [transcriptFailed, setTranscriptFailed] = useState(false);
+	const { briefState, workspaceSnapshot } = useTerminalHandoffBrief({
+		workspaceId,
+		terminalId,
+		enabled: action === "handoff",
+		bindingLive: Boolean(binding && !binding.endedAt),
+	});
+	const [graceDeadline, setGraceDeadline] = useState<number | null>(null);
 
 	const sourceConfig = useMemo(() => {
 		const sourceId = binding?.definitionId ?? binding?.agentId;
@@ -119,23 +131,18 @@ export function TerminalSessionHandoffMenu({
 		if (defaultTargetConfigId) setTargetConfigId(defaultTargetConfigId);
 	}, [action, defaultTargetConfigId, targetConfigId]);
 
-	if (!binding) return null;
+	// Remove the grace deadline when the dialog closes. An old deadline can
+	// start a session after the user re-opens the dialog, with no click.
+	useEffect(() => {
+		if (action !== "handoff") setGraceDeadline(null);
+	}, [action]);
 
-	const openAction = (nextAction: SessionAction) => {
-		setMenuOpen(false);
-		setAction(nextAction);
-		setPlacement("split-pane");
-		if (nextAction === "handoff") {
-			setTargetConfigId(defaultTargetConfigId);
-		}
-	};
-
-	const start = async () => {
+	const launch = useCallback(async () => {
 		if (!action) return;
 		setIsStarting(true);
 		try {
 			if (action === "fork") {
-				if (!sourceConfig || !binding.agentSessionId || !canFork) return;
+				if (!sourceConfig || !binding?.agentSessionId || !canFork) return;
 				const result = await onCreateNewAgentSession({
 					configId: sourceConfig.id,
 					placement,
@@ -150,18 +157,84 @@ export function TerminalSessionHandoffMenu({
 			// Continue stays disabled without a transcript, and the dialog says
 			// why inline; this only guards the impossible.
 			if (!transcript) return;
+			const brief =
+				briefState.status === "ready" ? briefState.brief : undefined;
+			const prompt = brief
+				? buildTerminalSessionHandoffBriefPrompt({
+						brief,
+						workspaceSnapshot: workspaceSnapshot ?? undefined,
+						sourceAgentLabel: sourceConfig?.label ?? binding?.agentId,
+						sourceTerminalId: terminalId,
+					})
+				: buildTerminalSessionHandoffPrompt({
+						transcript,
+						sourceAgentLabel: sourceConfig?.label ?? binding?.agentId,
+						sourceTerminalId: terminalId,
+					});
 			const result = await onCreateNewAgentSession({
 				configId: selectedConfig.id,
 				placement,
-				prompt: buildTerminalSessionHandoffPrompt({
-					transcript,
-					sourceAgentLabel: sourceConfig?.label ?? binding.agentId,
-					sourceTerminalId: terminalId,
-				}),
+				prompt,
 			});
 			if (result) setAction(null);
 		} finally {
 			setIsStarting(false);
+		}
+	}, [
+		action,
+		sourceConfig,
+		binding,
+		canFork,
+		onCreateNewAgentSession,
+		placement,
+		selectedConfig,
+		transcript,
+		briefState,
+		workspaceSnapshot,
+		terminalId,
+	]);
+
+	const start = useCallback(async () => {
+		if (!action) return;
+		if (action === "handoff" && briefState.status === "waiting" && transcript) {
+			// The brief can arrive soon. Give it a short grace time. After the
+			// grace time, use the transcript prompt.
+			setGraceDeadline(briefContinueDeadline(briefState, Date.now()));
+			return;
+		}
+		await launch();
+	}, [action, briefState, transcript, launch]);
+
+	// During the grace time: the arrival or failure of the brief ends the
+	// wait now. At the deadline, use the transcript prompt.
+	useEffect(() => {
+		if (graceDeadline === null) return;
+		if (briefState.status !== "waiting") {
+			setGraceDeadline(null);
+			void launch();
+			return;
+		}
+		const remaining = graceDeadline - Date.now();
+		const finishWithTranscript = () => {
+			setGraceDeadline(null);
+			void launch();
+		};
+		if (remaining <= 0) {
+			finishWithTranscript();
+			return;
+		}
+		const timer = setTimeout(finishWithTranscript, remaining);
+		return () => clearTimeout(timer);
+	}, [graceDeadline, briefState.status, launch]);
+
+	if (!binding) return null;
+
+	const openAction = (nextAction: SessionAction) => {
+		setMenuOpen(false);
+		setAction(nextAction);
+		setPlacement("split-pane");
+		if (nextAction === "handoff") {
+			setTargetConfigId(defaultTargetConfigId);
 		}
 	};
 
@@ -173,6 +246,31 @@ export function TerminalSessionHandoffMenu({
 				Continue with another agent
 			</Trans>
 		);
+
+	const sourceAgentLabel = sourceConfig?.label ?? binding.agentId;
+
+	// The transcript size text. Shown when no brief attempt runs (bare shell,
+	// stopped agent) and after a brief failure. It shows what the fallback
+	// sends.
+	const transcriptDisclosure = transcriptFailed ? (
+		<Trans id="workspace.terminalPane.contextUnavailable">
+			Couldn't read this terminal's context.
+		</Trans>
+	) : transcript === null ? (
+		<Trans id="workspace.terminalPane.contextMeasuring">
+			Measuring the context to send to {selectedConfig?.label}…
+		</Trans>
+	) : transcript.length === 0 ? (
+		<Trans id="workspace.terminalPane.contextEmpty">
+			This terminal has no output to hand over yet.
+		</Trans>
+	) : (
+		<Trans id="workspace.terminalPane.contextDisclosureSized">
+			Sends {formatNumber(transcript.length)} characters of terminal context
+			(about {formatNumber(estimateTokens(transcript.length))} tokens) to{" "}
+			{selectedConfig?.label}.
+		</Trans>
+	);
 
 	return (
 		<>
@@ -264,30 +362,40 @@ export function TerminalSessionHandoffMenu({
 									triggerClassName="w-full"
 									onBeforeConfigureAgents={() => setAction(null)}
 								/>
-								{selectedConfig && (
-									<p className="text-muted-foreground text-xs">
-										{transcriptFailed ? (
-											<Trans id="workspace.terminalPane.contextUnavailable">
-												Couldn't read this terminal's context.
+								{selectedConfig &&
+									(briefState.status === "idle" ? (
+										<p className="text-muted-foreground text-xs">
+											{transcriptDisclosure}
+										</p>
+									) : briefState.status === "waiting" ? (
+										<p className="text-muted-foreground text-xs">
+											<Trans id="workspace.terminalPane.briefWaiting">
+												Asking {sourceAgentLabel} in this terminal to write a
+												handoff brief…
+											</Trans>{" "}
+											<Trans id="workspace.terminalPane.briefWaitingFallbackNote">
+												Superset will send the terminal transcript instead if it
+												doesn't finish.
 											</Trans>
-										) : transcript === null ? (
-											<Trans id="workspace.terminalPane.contextMeasuring">
-												Measuring the context to send to {selectedConfig.label}…
-											</Trans>
-										) : transcript.length === 0 ? (
-											<Trans id="workspace.terminalPane.contextEmpty">
-												This terminal has no output to hand over yet.
-											</Trans>
-										) : (
-											<Trans id="workspace.terminalPane.contextDisclosureSized">
-												Sends {formatNumber(transcript.length)} characters of
-												terminal context (about{" "}
-												{formatNumber(estimateTokens(transcript.length))}{" "}
+										</p>
+									) : briefState.status === "ready" && briefState.brief ? (
+										<p className="text-muted-foreground text-xs">
+											<Trans id="workspace.terminalPane.briefReadyDisclosure">
+												Sends {formatNumber(briefState.brief.length)} characters
+												of the agent's handoff brief (about{" "}
+												{formatNumber(estimateTokens(briefState.brief.length))}{" "}
 												tokens) to {selectedConfig.label}.
 											</Trans>
-										)}
-									</p>
-								)}
+										</p>
+									) : (
+										<p className="text-muted-foreground text-xs">
+											<Trans id="workspace.terminalPane.briefUnavailable">
+												{sourceAgentLabel} didn't answer in time — Superset will
+												send the terminal transcript instead.
+											</Trans>{" "}
+											{transcriptDisclosure}
+										</p>
+									))}
 							</div>
 						) : (
 							<div className="rounded-md border bg-muted/30 px-3 py-2 text-sm">
@@ -344,6 +452,7 @@ export function TerminalSessionHandoffMenu({
 							onClick={start}
 							disabled={
 								isStarting ||
+								graceDeadline !== null ||
 								(action === "fork"
 									? !canFork
 									: // Nothing to hand over, or the read failed: refuse before
@@ -354,6 +463,10 @@ export function TerminalSessionHandoffMenu({
 							{isStarting ? (
 								<Trans id="workspace.terminalPane.startingSession">
 									Starting…
+								</Trans>
+							) : graceDeadline !== null ? (
+								<Trans id="workspace.terminalPane.briefStillWriting">
+									Still writing the brief…
 								</Trans>
 							) : action === "fork" ? (
 								<Trans id="workspace.terminalPane.forkSessionConfirm">

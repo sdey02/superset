@@ -34820,6 +34820,34 @@ msgid "workspace.terminalPane.agentSessionIdMenuLabel"
 msgstr "ID sesi agen"
 
 #. js-lingui-explicit-id
+#. placeholder {0}: formatNumber(briefState.brief.length)
+#. placeholder {1}: formatNumber(estimateTokens(briefState.brief.length))
+#. placeholder {2}: selectedConfig.label
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefReadyDisclosure"
+msgstr "Mengirim {0} karakter brief serah terima agen (sekitar {1} token) ke {2}."
+
+#. js-lingui-explicit-id
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefStillWriting"
+msgstr "Masih menulis brief…"
+
+#. js-lingui-explicit-id
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefUnavailable"
+msgstr "{sourceAgentLabel} tidak menjawab tepat waktu — Superset akan mengirim transkrip terminal sebagai gantinya."
+
+#. js-lingui-explicit-id
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefWaiting"
+msgstr "Meminta {sourceAgentLabel} di terminal ini untuk menulis brief serah terima…"
+
+#. js-lingui-explicit-id
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefWaitingFallbackNote"
+msgstr "Superset akan mengirim transkrip terminal sebagai gantinya jika brief tidak selesai."
+
+#. js-lingui-explicit-id
 #: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalConnectionIndicator/TerminalConnectionIndicator.tsx
 msgid "workspace.terminalPane.connectionAria"
 msgstr "Koneksi terminal: {label}"
@@ -34827,7 +34855,7 @@ msgstr "Koneksi terminal: {label}"
 #. js-lingui-explicit-id
 #. placeholder {0}: formatNumber(transcript.length)
 #. placeholder {1}: formatNumber(estimateTokens(transcript.length))
-#. placeholder {2}: selectedConfig.label
+#. placeholder {2}: selectedConfig?.label
 #: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
 msgid "workspace.terminalPane.contextDisclosureSized"
 msgstr "Mengirim {0} karakter konteks terminal (sekitar {1} token) ke {2}."
@@ -34838,7 +34866,7 @@ msgid "workspace.terminalPane.contextEmpty"
 msgstr "Terminal ini belum punya keluaran untuk diserahkan."
 
 #. js-lingui-explicit-id
-#. placeholder {0}: selectedConfig.label
+#. placeholder {0}: selectedConfig?.label
 #: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
 msgid "workspace.terminalPane.contextMeasuring"
 msgstr "Mengukur konteks yang akan dikirim ke {0}…"

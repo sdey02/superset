@@ -34820,6 +34820,34 @@ msgid "workspace.terminalPane.agentSessionIdMenuLabel"
 msgstr "ID de sesión del agente"
 
 #. js-lingui-explicit-id
+#. placeholder {0}: formatNumber(briefState.brief.length)
+#. placeholder {1}: formatNumber(estimateTokens(briefState.brief.length))
+#. placeholder {2}: selectedConfig.label
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefReadyDisclosure"
+msgstr "Envía {0} caracteres del informe de traspaso del agente (unos {1} tokens) a {2}."
+
+#. js-lingui-explicit-id
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefStillWriting"
+msgstr "Aún escribiendo el informe…"
+
+#. js-lingui-explicit-id
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefUnavailable"
+msgstr "{sourceAgentLabel} no respondió a tiempo — Superset enviará la transcripción del terminal en su lugar."
+
+#. js-lingui-explicit-id
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefWaiting"
+msgstr "Pidiendo a {sourceAgentLabel} en este terminal que escriba un informe de traspaso…"
+
+#. js-lingui-explicit-id
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefWaitingFallbackNote"
+msgstr "Superset enviará la transcripción del terminal en su lugar si no termina."
+
+#. js-lingui-explicit-id
 #: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalConnectionIndicator/TerminalConnectionIndicator.tsx
 msgid "workspace.terminalPane.connectionAria"
 msgstr "Conexión de la terminal: {label}"
@@ -34827,7 +34855,7 @@ msgstr "Conexión de la terminal: {label}"
 #. js-lingui-explicit-id
 #. placeholder {0}: formatNumber(transcript.length)
 #. placeholder {1}: formatNumber(estimateTokens(transcript.length))
-#. placeholder {2}: selectedConfig.label
+#. placeholder {2}: selectedConfig?.label
 #: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
 msgid "workspace.terminalPane.contextDisclosureSized"
 msgstr "Envía {0} caracteres de contexto del terminal (unos {1} tokens) a {2}."
@@ -34838,7 +34866,7 @@ msgid "workspace.terminalPane.contextEmpty"
 msgstr "Este terminal aún no tiene salida que transferir."
 
 #. js-lingui-explicit-id
-#. placeholder {0}: selectedConfig.label
+#. placeholder {0}: selectedConfig?.label
 #: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
 msgid "workspace.terminalPane.contextMeasuring"
 msgstr "Midiendo el contexto que se enviará a {0}…"
