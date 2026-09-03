@@ -34950,7 +34950,7 @@ msgstr "agentsessie-ID"
 #. js-lingui-explicit-id
 #: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
 msgid "workspace.terminalPane.briefPreparing"
-msgstr "Bezig met voorbereiden om {sourceAgentLabel} om een handoff-samenvatting te vragen…"
+msgstr "Bezig met voorbereiden om {sourceAgentLabel} een overdrachtsnotitie te vragen…"
 
 #. js-lingui-explicit-id
 #. placeholder {0}: formatNumber(briefState.brief.length)

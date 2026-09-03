@@ -28,6 +28,10 @@ interface HandoffBriefAttempt {
 	 * resumed. The next dialog open makes a new request, so the brief cannot
 	 * omit work done after the old reply. */
 	resolved?: boolean;
+	/** True when the request send hit its deadline. The write may still land
+	 * in the terminal, so this entry blocks a second injection until the TTL
+	 * ends. The agent then receives at most one brief request. */
+	deliveryUnknown?: boolean;
 }
 
 /**
@@ -49,10 +53,12 @@ function mintNonce(): string {
 
 /** Reject if the underlying promise has not settled within the deadline, so a
  * stalled host request cannot hold the dialog in preparing. */
+class HandoffSetupTimeoutError extends Error {}
+
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
 	return new Promise<T>((resolve, reject) => {
 		const timer = setTimeout(
-			() => reject(new Error("handoff brief setup timed out")),
+			() => reject(new HandoffSetupTimeoutError("handoff brief setup timed out")),
 			timeoutMs,
 		);
 		promise.then(
@@ -166,6 +172,15 @@ export function useTerminalHandoffBrief(input: {
 			if (resumable) {
 				// Continue the same attempt: same nonce, original start time.
 				dispatch({ type: "start", nonce: cached.nonce, now: cached.startedAt });
+			} else if (
+				cached?.deliveryUnknown &&
+				isBriefAttemptFresh(cached.startedAt, Date.now())
+			) {
+				// The last request hit its deadline, but the write may still
+				// land in the terminal. Do not inject a second request this
+				// soon. Use the transcript prompt.
+				dispatch({ type: "reset" });
+				return;
 			} else {
 				// Clear any finished state now, before the awaits below. A
 				// ready brief from a replaced agent session must not stay
@@ -220,12 +235,21 @@ export function useTerminalHandoffBrief(input: {
 						}),
 						HANDOFF_BRIEF_SETUP_TIMEOUT_MS,
 					);
-				} catch {
-					// The send did not complete. Remove this attempt, so a later
-					// dialog open makes a new request instead of waiting for a
-					// reply that was never requested. Keep entries from newer
-					// attempts.
-					if (attempts.get(key)?.nonce === nonce) {
+				} catch (error) {
+					const current = attempts.get(key);
+					if (error instanceof HandoffSetupTimeoutError) {
+						// The deadline passed, but the write may still reach the
+						// terminal. Keep the entry as a tombstone, so a reopen
+						// cannot inject a second brief request before the TTL
+						// ends.
+						if (current?.nonce === nonce) {
+							current.resolved = true;
+							current.deliveryUnknown = true;
+						}
+					} else if (current?.nonce === nonce) {
+						// A failed send cannot deliver anything. Remove the
+						// attempt, so a reopen can retry at once. Keep entries
+						// from newer attempts.
 						attempts.delete(key);
 					}
 					if (!cancelled) dispatch({ type: "send-failed" });

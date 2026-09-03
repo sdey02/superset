@@ -34950,7 +34950,7 @@ msgstr "에이전트 세션 ID"
 #. js-lingui-explicit-id
 #: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
 msgid "workspace.terminalPane.briefPreparing"
-msgstr "{sourceAgentLabel}에게 핸드오프 브리프를 요청할 준비 중…"
+msgstr "{sourceAgentLabel}에게 인계 브리핑 작성을 요청할 준비 중…"
 
 #. js-lingui-explicit-id
 #. placeholder {0}: formatNumber(briefState.brief.length)
