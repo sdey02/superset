@@ -25,6 +25,11 @@ import type {
 	DashboardSidebarWorkspace,
 } from "../../types";
 import {
+	type CloudPullRequestRef,
+	cloudPullRequestRefKey,
+	useSidebarCloudPullRequests,
+} from "../useSidebarCloudPullRequests";
+import {
 	buildDashboardSidebarPinnedWorkspaces,
 	buildDashboardSidebarProjects,
 	buildDashboardSidebarSessions,
@@ -305,6 +310,8 @@ export function useDashboardSidebarData() {
 					sectionId: sidebarWorkspaces.sidebarState.sectionId,
 					isHidden: sidebarWorkspaces.sidebarState.isHidden,
 					pinnedAt: sidebarWorkspaces.sidebarState.pinnedAt,
+					suppressedPullRequestUrl:
+						sidebarWorkspaces.sidebarState.suppressedPullRequestUrl,
 				})),
 		[collections],
 	);
@@ -329,6 +336,7 @@ export function useDashboardSidebarData() {
 						tags: workspace.tags,
 						isHidden: localState.isHidden,
 						pinnedAt: localState.pinnedAt,
+						suppressedPullRequestUrl: localState.suppressedPullRequestUrl,
 					},
 				];
 			}),
@@ -380,6 +388,7 @@ export function useDashboardSidebarData() {
 					// Auto-included mains have no local-state row; pinning one
 					// creates a row first (see setWorkspacePinned).
 					pinnedAt: null as number | null,
+					suppressedPullRequestUrl: null as string | null,
 				})),
 		[hostWorkspaces],
 	);
@@ -414,6 +423,39 @@ export function useDashboardSidebarData() {
 		sidebarWorkspaces,
 	]);
 
+	// Pull-request chips come from the cloud table, matched on the project's
+	// repository and the row's branch: one request for every row on screen,
+	// and no host — or sandbox — asked. A workspace whose project has no
+	// GitHub remote has nothing to match on and gets no chip from here.
+	const repoFullNameByProjectId = useMemo(
+		() =>
+			new Map(
+				sidebarProjects.map((project) => [
+					project.id,
+					project.githubOwner && project.githubRepoName
+						? `${project.githubOwner}/${project.githubRepoName}`
+						: null,
+				]),
+			),
+		[sidebarProjects],
+	);
+	const cloudPullRequestRefs = useMemo<CloudPullRequestRef[]>(
+		() =>
+			visibleSidebarWorkspaces.flatMap((workspace) => {
+				const repoFullName = workspace.projectId
+					? repoFullNameByProjectId.get(workspace.projectId)
+					: null;
+				return repoFullName
+					? [{ repoFullName, headBranch: workspace.branch }]
+					: [];
+			}),
+		[repoFullNameByProjectId, visibleSidebarWorkspaces],
+	);
+	const cloudPullRequests = useSidebarCloudPullRequests(cloudPullRequestRefs);
+	// Only an organization without the GitHub App falls back to asking each
+	// host; a host it cannot reach keeps its cached chips either way.
+	const useHostPullRequests = cloudPullRequests.hasInstallation === false;
+
 	const pullRequestQueryTargets = useMemo<PullRequestQueryTarget[]>(
 		() =>
 			derivePullRequestQueryTargets({
@@ -443,7 +485,7 @@ export function useDashboardSidebarData() {
 			refetchInterval: 10_000,
 			// Unreachable host: keep the query mounted so cached chips stay
 			// rendered through the outage; fetches resume when the URL returns.
-			enabled: target.hostUrl !== null,
+			enabled: useHostPullRequests && target.hostUrl !== null,
 			queryFn: async () => {
 				if (!target.hostUrl) return { workspaces: [] };
 				const client = getHostServiceClientByUrl(target.hostUrl);
@@ -456,6 +498,28 @@ export function useDashboardSidebarData() {
 
 	const pullRequestRows = useMemo<PullRequestWorkspaceRow[]>(() => {
 		const rows: PullRequestWorkspaceRow[] = [];
+		if (!useHostPullRequests) {
+			for (const workspace of visibleSidebarWorkspaces) {
+				const repoFullName = workspace.projectId
+					? repoFullNameByProjectId.get(workspace.projectId)
+					: null;
+				if (!repoFullName) continue;
+				const pullRequest = cloudPullRequests.byRef.get(
+					cloudPullRequestRefKey({
+						repoFullName,
+						headBranch: workspace.branch,
+					}),
+				);
+				// "Remove PR link" hides that one PR; a different PR still shows.
+				if (
+					!pullRequest ||
+					pullRequest.url === workspace.suppressedPullRequestUrl
+				)
+					continue;
+				rows.push({ workspaceId: workspace.id, pullRequest });
+			}
+			return rows;
+		}
 		for (const query of pullRequestQueries) {
 			const data = query.data;
 			if (!data) continue;
@@ -467,7 +531,13 @@ export function useDashboardSidebarData() {
 			}
 		}
 		return rows;
-	}, [pullRequestQueries]);
+	}, [
+		cloudPullRequests.byRef,
+		pullRequestQueries,
+		repoFullNameByProjectId,
+		useHostPullRequests,
+		visibleSidebarWorkspaces,
+	]);
 
 	const refreshWorkspacePullRequest = useCallback(
 		async (workspaceId: string) => {
@@ -475,6 +545,13 @@ export function useDashboardSidebarData() {
 				(candidate) => candidate.id === workspaceId,
 			);
 			if (!workspace) return;
+			if (!useHostPullRequests) {
+				if (!pullRequestRefreshGate.shouldRefresh(workspaceId, Date.now())) {
+					return;
+				}
+				await cloudPullRequests.refetch();
+				return;
+			}
 			const target = pullRequestQueryTargets.find(
 				(candidate) => candidate.machineId === workspace.hostId,
 			);
@@ -491,7 +568,13 @@ export function useDashboardSidebarData() {
 				queryKey: getDashboardSidebarPullRequestQueryKey(target),
 			});
 		},
-		[pullRequestQueryTargets, queryClient, visibleSidebarWorkspaces],
+		[
+			cloudPullRequests.refetch,
+			pullRequestQueryTargets,
+			queryClient,
+			useHostPullRequests,
+			visibleSidebarWorkspaces,
+		],
 	);
 
 	const pullRequestsByWorkspaceId =

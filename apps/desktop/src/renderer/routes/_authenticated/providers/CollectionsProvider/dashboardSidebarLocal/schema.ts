@@ -146,6 +146,10 @@ export const workspaceLocalStateSchema = z.object({
 		// Epoch ms when the user pinned this workspace to the sidebar's Pinned
 		// section; null = not pinned. Ordering is pinnedAt ascending.
 		pinnedAt: z.number().int().nullable().default(null),
+		// "Remove PR link" for a chip sourced from the cloud pull-request table:
+		// that PR stays hidden on this row, a different PR still shows. The
+		// host keeps its own copy of the same decision for the views it serves.
+		suppressedPullRequestUrl: z.string().nullable().default(null),
 	}),
 	paneLayout: paneWorkspaceStateSchema,
 	viewedFiles: z.array(z.string()).default([]),
@@ -188,6 +192,7 @@ const SIDEBAR_STATE_DEFAULTS = {
 	activeTab: "changes",
 	isHidden: false,
 	pinnedAt: null,
+	suppressedPullRequestUrl: null,
 } as const;
 
 const WORKSPACE_LOCAL_STATE_OPTIONAL_DEFAULTS = {

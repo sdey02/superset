@@ -1,10 +1,17 @@
 import { useLingui } from "@lingui/react/macro";
 import { useLiveQuery } from "@tanstack/react-db";
 import { useMemo } from "react";
+import { useActiveOrganizationId } from "renderer/hooks/useActiveOrganizationId";
 import { useCloudWorkspaces } from "renderer/hooks/useCloudWorkspaces";
+import { cloudTrpc } from "renderer/lib/cloud-trpc";
 import { useCollections } from "renderer/routes/_authenticated/providers/CollectionsProvider";
 import { useHostWorkspaces } from "renderer/routes/_authenticated/providers/HostWorkspacesProvider";
 import { useSidebarSectionsCollapseStore } from "renderer/stores/sidebar-sections-collapse";
+import {
+	type CloudPullRequestRef,
+	cloudPullRequestRefKey,
+	useSidebarCloudPullRequests,
+} from "../../hooks/useSidebarCloudPullRequests";
 import type { DashboardSidebarWorkspace } from "../../types";
 import { DashboardSidebarSectionHeader } from "../DashboardSidebarSectionHeader";
 import { DashboardSidebarWorkspaceItem } from "../DashboardSidebarWorkspaceItem";
@@ -18,9 +25,10 @@ import { DashboardSidebarWorkspaceItem } from "../DashboardSidebarWorkspaceItem"
  *
  * The cloud row owns the workspace's identity — it is what created, named and
  * lists it. The row inside the sandbox exists only so host-service has
- * something to serve panes against, so its name is ignored here; live git
- * state (branch) still comes from the sandbox, which is the only thing that
- * knows it.
+ * something to serve panes against, so its name is ignored here. Its branch
+ * is read only for the workspace that is open (the only sandbox the fan-out
+ * addresses); every other row shows the branch it was created on. Pull
+ * requests come from the cloud table, since asking a sandbox would wake it.
  */
 export function DashboardSidebarCloudSection({
 	isCollapsed,
@@ -50,12 +58,48 @@ export function DashboardSidebarCloudSection({
 					isHidden: local.sidebarState.isHidden,
 					pinnedAt: local.sidebarState.pinnedAt,
 					tabOrder: local.sidebarState.tabOrder,
+					suppressedPullRequestUrl: local.sidebarState.suppressedPullRequestUrl,
 				})),
 		[collections],
 	);
 
-	const rows = useMemo<DashboardSidebarWorkspace[]>(() => {
+	// Every cloud workspace clones the one cloud repository, so that is the
+	// repository every row's branch is matched against.
+	const organizationId = useActiveOrganizationId();
+	const { data: cloudRepo } = cloudTrpc.cloudWorkspace.repo.useQuery(
+		{ organizationId: organizationId ?? "" },
+		{
+			enabled: organizationId !== null && cloudWorkspaces.length > 0,
+			staleTime: Number.POSITIVE_INFINITY,
+		},
+	);
+	const cloudRepoFullName = cloudRepo
+		? `${cloudRepo.owner}/${cloudRepo.name}`
+		: null;
+
+	const branchById = useMemo(() => {
 		const servedById = new Map(hostWorkspaces.map((row) => [row.id, row]));
+		return new Map(
+			cloudWorkspaces.map((cloud) => [
+				cloud.id,
+				servedById.get(cloud.id)?.branch ?? cloud.branch,
+			]),
+		);
+	}, [cloudWorkspaces, hostWorkspaces]);
+
+	const pullRequestRefs = useMemo<CloudPullRequestRef[]>(
+		() =>
+			cloudRepoFullName
+				? cloudWorkspaces.map((cloud) => ({
+						repoFullName: cloudRepoFullName,
+						headBranch: branchById.get(cloud.id) ?? cloud.branch,
+					}))
+				: [],
+		[branchById, cloudRepoFullName, cloudWorkspaces],
+	);
+	const cloudPullRequests = useSidebarCloudPullRequests(pullRequestRefs);
+
+	const rows = useMemo<DashboardSidebarWorkspace[]>(() => {
 		const localById = new Map(
 			localStateRows.map((row) => [row.workspaceId, row]),
 		);
@@ -73,7 +117,16 @@ export function DashboardSidebarCloudSection({
 					(localById.get(right.id)?.tabOrder ?? 0),
 			)
 			.map((cloud) => {
-				const served = servedById.get(cloud.id);
+				const branch = branchById.get(cloud.id) ?? cloud.branch;
+				const pullRequest = cloudRepoFullName
+					? (cloudPullRequests.byRef.get(
+							cloudPullRequestRefKey({
+								repoFullName: cloudRepoFullName,
+								headBranch: branch,
+							}),
+						) ?? null)
+					: null;
+				const suppressedUrl = localById.get(cloud.id)?.suppressedPullRequestUrl;
 				return {
 					id: cloud.id,
 					// Grouping is by section here, and the sandbox's project id means
@@ -87,8 +140,11 @@ export function DashboardSidebarCloudSection({
 					hostIsOnline: null,
 					accentColor: null,
 					name: cloud.name,
-					branch: served?.branch ?? cloud.branch,
-					pullRequest: null,
+					branch,
+					pullRequest:
+						pullRequest && pullRequest.url !== suppressedUrl
+							? pullRequest
+							: null,
 					repoUrl: null,
 					branchExistsOnRemote: true,
 					previewUrl: null,
@@ -114,7 +170,13 @@ export function DashboardSidebarCloudSection({
 							: null,
 				};
 			});
-	}, [cloudWorkspaces, hostWorkspaces, localStateRows]);
+	}, [
+		branchById,
+		cloudPullRequests.byRef,
+		cloudRepoFullName,
+		cloudWorkspaces,
+		localStateRows,
+	]);
 
 	if (rows.length === 0) return null;
 

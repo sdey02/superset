@@ -975,6 +975,37 @@ export function useDashboardSidebarState() {
 		[collections, hostWorkspaces, tagFolderContext],
 	);
 
+	/**
+	 * "Remove PR link" for a chip sourced from the cloud table. Null clears
+	 * it. A row without local state (an auto-included main) gets one, the way
+	 * pinning does — the decision has to live somewhere.
+	 */
+	const setWorkspaceSuppressedPullRequest = useCallback(
+		(
+			workspaceId: string,
+			projectId: string | null,
+			pullRequestUrl: string | null,
+		) => {
+			if (!collections.v2WorkspaceLocalState.get(workspaceId)) {
+				if (pullRequestUrl === null) return;
+				if (projectId !== null) {
+					ensureSidebarProjectRecord(collections, projectId);
+				}
+				ensureSidebarWorkspaceRecord(
+					collections,
+					hostWorkspaces,
+					tagFolderContext,
+					workspaceId,
+					projectId,
+				);
+			}
+			collections.v2WorkspaceLocalState.update(workspaceId, (draft) => {
+				draft.sidebarState.suppressedPullRequestUrl = pullRequestUrl;
+			});
+		},
+		[collections, hostWorkspaces, tagFolderContext],
+	);
+
 	const reorderPinnedWorkspaces = useCallback(
 		(
 			orderedPins: Array<{ workspaceId: string; projectId: string | null }>,
@@ -1076,6 +1107,7 @@ export function useDashboardSidebarState() {
 		renameSection,
 		setSectionColor,
 		setWorkspacePinned,
+		setWorkspaceSuppressedPullRequest,
 		toggleProjectCollapsed,
 		toggleSectionCollapsed,
 	};

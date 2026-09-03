@@ -44,6 +44,8 @@ interface UseDashboardSidebarWorkspaceItemActionsOptions {
 	isSessionWorkspace?: boolean;
 	workspaceName: string;
 	branch: string;
+	/** The chip currently shown, so "Remove PR link" knows which PR to hide. */
+	pullRequestUrl?: string | null;
 	isMainWorkspace?: boolean;
 	isPinned?: boolean;
 }
@@ -54,6 +56,7 @@ export function useDashboardSidebarWorkspaceItemActions({
 	isSessionWorkspace = false,
 	workspaceName,
 	branch,
+	pullRequestUrl = null,
 	isMainWorkspace = false,
 	isPinned = false,
 }: UseDashboardSidebarWorkspaceItemActionsOptions) {
@@ -88,8 +91,12 @@ export function useDashboardSidebarWorkspaceItemActions({
 		clearManualUnread(workspaceId);
 		markWorkspaceTerminalsSeen();
 	};
-	const { createSection, moveWorkspaceToSection, setWorkspacePinned } =
-		useDashboardSidebarState();
+	const {
+		createSection,
+		moveWorkspaceToSection,
+		setWorkspacePinned,
+		setWorkspaceSuppressedPullRequest,
+	} = useDashboardSidebarState();
 
 	const [isRenaming, setIsRenaming] = useState(false);
 	const [renameValue, setRenameValue] = useState(workspaceName);
@@ -283,10 +290,18 @@ export function useDashboardSidebarWorkspaceItemActions({
 	};
 
 	const handleRemovePullRequest = async () => {
+		// The chip is sourced from the cloud table, so the decision lives in
+		// local sidebar state and takes effect at once. The host keeps its own
+		// copy for the views it serves, when it can be reached.
+		if (pullRequestUrl) {
+			setWorkspaceSuppressedPullRequest(workspaceId, projectId, pullRequestUrl);
+		}
 		if (!workspaceHostUrl) {
-			showHostServiceUnavailableToast(hostService, {
-				action: "removePrLink",
-			});
+			if (!pullRequestUrl) {
+				showHostServiceUnavailableToast(hostService, {
+					action: "removePrLink",
+				});
+			}
 			return;
 		}
 		try {
