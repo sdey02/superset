@@ -8,6 +8,7 @@ import { workspaceTrpc } from "@superset/workspace-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
 	HANDOFF_BRIEF_POLL_INTERVAL_MS,
+	HANDOFF_BRIEF_SETUP_TIMEOUT_MS,
 	type HandoffBriefEvent,
 	type HandoffBriefState,
 	isBriefAttemptFresh,
@@ -44,6 +45,27 @@ function attemptKey(workspaceId: string, terminalId: string): string {
 
 function mintNonce(): string {
 	return crypto.randomUUID().replaceAll("-", "").slice(0, 8);
+}
+
+/** Reject if the underlying promise has not settled within the deadline, so a
+ * stalled host request cannot hold the dialog in preparing. */
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+	return new Promise<T>((resolve, reject) => {
+		const timer = setTimeout(
+			() => reject(new Error("handoff brief setup timed out")),
+			timeoutMs,
+		);
+		promise.then(
+			(value) => {
+				clearTimeout(timer);
+				resolve(value);
+			},
+			(error) => {
+				clearTimeout(timer);
+				reject(error);
+			},
+		);
+	});
 }
 
 export interface TerminalHandoffBrief {
@@ -153,13 +175,19 @@ export function useTerminalHandoffBrief(input: {
 				let hasRunningProcess = false;
 				if (bindingLive) {
 					try {
-						hasRunningProcess = (
-							await trpcUtils.terminal.hasRunningProcess.fetch({
-								workspaceId,
-								terminalId,
-							})
-						).running;
+						hasRunningProcess = await withTimeout(
+							trpcUtils.terminal.hasRunningProcess
+								.fetch({
+									workspaceId,
+									terminalId,
+								})
+								.then((result) => result.running),
+							HANDOFF_BRIEF_SETUP_TIMEOUT_MS,
+						);
 					} catch {
+						// A stalled or failed check counts as no process. The gate
+						// below then picks the transcript prompt, so the fallback
+						// stays reachable.
 						hasRunningProcess = false;
 					}
 				}
@@ -181,14 +209,17 @@ export function useTerminalHandoffBrief(input: {
 				});
 				dispatch({ type: "start", nonce, now: startedAt });
 				try {
-					await sendRequest.mutateAsync({
-						workspaceId,
-						terminalId,
-						text: sanitizePromptForPty(
-							buildTerminalHandoffBriefRequestPrompt({ nonce }),
-						),
-						submit: true,
-					});
+					await withTimeout(
+						sendRequest.mutateAsync({
+							workspaceId,
+							terminalId,
+							text: sanitizePromptForPty(
+								buildTerminalHandoffBriefRequestPrompt({ nonce }),
+							),
+							submit: true,
+						}),
+						HANDOFF_BRIEF_SETUP_TIMEOUT_MS,
+					);
 				} catch {
 					// The send did not complete. Remove this attempt, so a later
 					// dialog open makes a new request instead of waiting for a

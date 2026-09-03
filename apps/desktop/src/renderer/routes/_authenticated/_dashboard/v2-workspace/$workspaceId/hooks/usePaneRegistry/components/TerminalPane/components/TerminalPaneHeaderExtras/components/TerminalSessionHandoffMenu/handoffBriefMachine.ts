@@ -14,6 +14,10 @@ export const HANDOFF_CONTINUE_GRACE_MS = 20_000;
 /** After this time, a cached attempt is too old. The next dialog open makes a
  * new attempt. */
 export const HANDOFF_ATTEMPT_TTL_MS = 5 * 60_000;
+/** Bound on one setup step (the process check, then the request send). A
+ * stalled host request must end the preparing state, so the transcript
+ * fallback stays reachable. */
+export const HANDOFF_BRIEF_SETUP_TIMEOUT_MS = 10_000;
 
 export type HandoffBriefStatus =
 	| "idle"

@@ -34947,6 +34947,11 @@ msgid "workspace.terminalPane.agentSessionIdMenuLabel"
 msgstr "ID de session d'agent"
 
 #. js-lingui-explicit-id
+#: ../../apps/desktop/src/renderer/routes/_authenticated/_dashboard/v2-workspace/$workspaceId/hooks/usePaneRegistry/components/TerminalPane/components/TerminalPaneHeaderExtras/components/TerminalSessionHandoffMenu/TerminalSessionHandoffMenu.tsx
+msgid "workspace.terminalPane.briefPreparing"
+msgstr "Préparation de la demande de brief de passation à {sourceAgentLabel}…"
+
+#. js-lingui-explicit-id
 #. placeholder {0}: formatNumber(briefState.brief.length)
 #. placeholder {1}: formatNumber(estimateTokens(briefState.brief.length))
 #. placeholder {2}: selectedConfig.label

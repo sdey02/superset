@@ -216,6 +216,12 @@ export function TerminalSessionHandoffMenu({
 	// wait now. At the deadline, continue without the brief.
 	useEffect(() => {
 		if (graceDeadline === null) return;
+		if (briefState.status === "preparing") {
+			// The old attempt was invalidated mid-wait. Drop the pending
+			// launch. The user decides again once the new attempt runs.
+			setGraceDeadline(null);
+			return;
+		}
 		if (briefState.status !== "waiting") {
 			setGraceDeadline(null);
 			void launch();
@@ -370,10 +376,16 @@ export function TerminalSessionHandoffMenu({
 									onBeforeConfigureAgents={() => setAction(null)}
 								/>
 								{selectedConfig &&
-									(briefState.status === "idle" ||
-									briefState.status === "preparing" ? (
+									(briefState.status === "idle" ? (
 										<p className="text-muted-foreground text-xs">
 											{transcriptDisclosure}
+										</p>
+									) : briefState.status === "preparing" ? (
+										<p className="text-muted-foreground text-xs">
+											<Trans id="workspace.terminalPane.briefPreparing">
+												Getting ready to ask {sourceAgentLabel} for a handoff
+												brief…
+											</Trans>
 										</p>
 									) : briefState.status === "waiting" ? (
 										<p className="text-muted-foreground text-xs">
