@@ -96,11 +96,41 @@ describe("reduceHandoffBrief", () => {
 	});
 
 	it("resets to idle from any state", () => {
-		for (const status of ["waiting", "ready", "failed"] as const) {
+		for (const status of [
+			"preparing",
+			"waiting",
+			"ready",
+			"failed",
+		] as const) {
 			expect(reduceHandoffBrief({ status }, { type: "reset" }, 0).status).toBe(
 				"idle",
 			);
 		}
+	});
+
+	it("prepares from any state and fails out of preparing on send failure or agent end", () => {
+		expect(
+			reduceHandoffBrief(
+				{ status: "ready", brief: "old" },
+				{ type: "prepare" },
+				0,
+			).status,
+		).toBe("preparing");
+		const preparing = reduceHandoffBrief(
+			{ status: "idle" },
+			{ type: "prepare" },
+			0,
+		);
+		expect(
+			reduceHandoffBrief(preparing, { type: "send-failed" }, 1_000).status,
+		).toBe("failed");
+		expect(
+			reduceHandoffBrief(preparing, { type: "agent-ended" }, 1_000).status,
+		).toBe("failed");
+		expect(
+			reduceHandoffBrief(preparing, { type: "timeout", now: 90_000_000 }, 90_000_000)
+				.status,
+		).toBe("preparing");
 	});
 });
 

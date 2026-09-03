@@ -370,7 +370,8 @@ export function TerminalSessionHandoffMenu({
 									onBeforeConfigureAgents={() => setAction(null)}
 								/>
 								{selectedConfig &&
-									(briefState.status === "idle" ? (
+									(briefState.status === "idle" ||
+									briefState.status === "preparing" ? (
 										<p className="text-muted-foreground text-xs">
 											{transcriptDisclosure}
 										</p>
@@ -463,8 +464,10 @@ export function TerminalSessionHandoffMenu({
 								(action === "fork"
 									? !canFork
 									: // Continue needs one usable seed: the transcript or a
-										// finished brief. Refuse before the click, not after it.
+										// finished brief. It waits while a new attempt is
+										// prepared. Refuse before the click, not after it.
 										!selectedConfig ||
+										briefState.status === "preparing" ||
 										(!transcript && briefState.status !== "ready"))
 							}
 						>

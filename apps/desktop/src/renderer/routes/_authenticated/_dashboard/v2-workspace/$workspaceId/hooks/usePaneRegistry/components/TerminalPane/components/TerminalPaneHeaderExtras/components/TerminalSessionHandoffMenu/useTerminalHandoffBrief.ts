@@ -147,8 +147,9 @@ export function useTerminalHandoffBrief(input: {
 			} else {
 				// Clear any finished state now, before the awaits below. A
 				// ready brief from a replaced agent session must not stay
-				// launchable while the new attempt is set up.
-				dispatch({ type: "reset" });
+				// launchable while the new attempt is set up. Continue stays
+				// disabled while the status is preparing.
+				dispatch({ type: "prepare" });
 				let hasRunningProcess = false;
 				if (bindingLive) {
 					try {

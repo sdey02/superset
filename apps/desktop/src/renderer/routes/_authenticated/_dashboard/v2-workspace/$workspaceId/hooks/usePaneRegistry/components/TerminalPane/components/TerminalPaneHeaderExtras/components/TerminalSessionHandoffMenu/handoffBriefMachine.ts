@@ -15,7 +15,12 @@ export const HANDOFF_CONTINUE_GRACE_MS = 20_000;
  * new attempt. */
 export const HANDOFF_ATTEMPT_TTL_MS = 5 * 60_000;
 
-export type HandoffBriefStatus = "idle" | "waiting" | "ready" | "failed";
+export type HandoffBriefStatus =
+	| "idle"
+	| "preparing"
+	| "waiting"
+	| "ready"
+	| "failed";
 
 export interface HandoffBriefState {
 	status: HandoffBriefStatus;
@@ -27,6 +32,7 @@ export interface HandoffBriefState {
 }
 
 export type HandoffBriefEvent =
+	| { type: "prepare" }
 	| { type: "start"; nonce: string; now: number }
 	| { type: "send-failed" }
 	| { type: "brief"; brief: string }
@@ -54,11 +60,17 @@ export function reduceHandoffBrief(
 	now: number,
 ): HandoffBriefState {
 	switch (event.type) {
+		case "prepare":
+			// Setup runs awaits before the request goes out. No seed is usable
+			// in this state, and the dialog keeps Continue disabled.
+			return { status: "preparing" };
 		case "start":
 			return { status: "waiting", nonce: event.nonce, startedAt: event.now };
 		case "send-failed":
 		case "agent-ended":
-			return state.status === "waiting" ? { status: "failed" } : state;
+			return state.status === "waiting" || state.status === "preparing"
+				? { status: "failed" }
+				: state;
 		case "brief":
 			// The first complete reply sets the result. A late reply cannot
 			// change a failed or reset attempt.
