@@ -77,6 +77,7 @@ export function TerminalSessionHandoffMenu({
 		terminalId,
 		enabled: action === "handoff",
 		bindingLive: Boolean(binding && !binding.endedAt),
+		bindingStartedAt: binding?.startedAt,
 	});
 	const [graceDeadline, setGraceDeadline] = useState<number | null>(null);
 

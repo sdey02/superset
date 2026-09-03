@@ -10,7 +10,6 @@ import {
 	TERMINAL_HANDOFF_BRIEF_CAPTURE_CHARS,
 	TERMINAL_HANDOFF_BRIEF_MAX_CHARS,
 	TERMINAL_HANDOFF_MAX_CHARS,
-	TRANSCRIPT_TRUNCATION_NOTICE,
 } from "./terminal-session-handoff";
 
 describe("buildBoundedTerminalSessionTranscript", () => {
@@ -224,12 +223,19 @@ describe("extractTerminalHandoffBrief", () => {
 		expect(extractTerminalHandoffBrief(`${open}\n${close}`, nonce)).toBeNull();
 	});
 
-	it("returns null when the content contains a marker line", () => {
-		const transcript = `${open}\n${brief}\n${open}\n${close}`;
-		expect(extractTerminalHandoffBrief(transcript, nonce)).toBeNull();
+	it("keeps the indentation of the first content line", () => {
+		const transcript = `${open}\n    indented code block\n${close}`;
+		expect(extractTerminalHandoffBrief(transcript, nonce)).toBe(
+			"    indented code block",
+		);
 	});
 
-	it("bounds oversized briefs with the truncation notice", () => {
+	it("drops blank lines at the content boundaries only", () => {
+		const transcript = `${open}\n\nline one\n\n${close}`;
+		expect(extractTerminalHandoffBrief(transcript, nonce)).toBe("line one");
+	});
+
+	it("bounds oversized briefs from the head, so the first sections survive", () => {
 		const oversized = `${brief}\n${"x".repeat(TERMINAL_HANDOFF_BRIEF_MAX_CHARS)}`;
 		const extracted = extractTerminalHandoffBrief(
 			`${open}\n${oversized}\n${close}`,
@@ -239,8 +245,8 @@ describe("extractTerminalHandoffBrief", () => {
 		expect(extracted?.length).toBeLessThanOrEqual(
 			TERMINAL_HANDOFF_BRIEF_MAX_CHARS,
 		);
-		expect(extracted?.startsWith(TRANSCRIPT_TRUNCATION_NOTICE)).toBe(true);
-		expect(extracted?.endsWith("none")).toBe(false);
+		expect(extracted?.startsWith("# Governing request")).toBe(true);
+		expect(extracted?.endsWith("[later output omitted]")).toBe(true);
 	});
 });
 

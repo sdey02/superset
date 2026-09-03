@@ -251,6 +251,25 @@ function stripEscapeSequences(line: string): string {
 		.replace(TWO_BYTE_ESCAPE_PATTERN, "");
 }
 
+const BRIEF_TRUNCATION_NOTICE = "\n[later output omitted]";
+
+/**
+ * A brief is a structured document. Its first sections carry the governing
+ * request and the next action, so an oversized brief keeps its head and loses
+ * its tail. A transcript keeps its tail instead, because its newest text is
+ * the live state. That difference is why this function exists beside
+ * `boundTranscriptText`.
+ */
+function boundBriefText(text: string, maxChars: number): string {
+	if (text.length <= maxChars) return text;
+	const budget = maxChars - BRIEF_TRUNCATION_NOTICE.length;
+	if (budget < 1) return text.slice(0, maxChars);
+	const head = text.slice(0, budget);
+	const lastBreak = head.lastIndexOf("\n");
+	const whole = lastBreak > 0 ? head.slice(0, lastBreak) : head;
+	return `${whole}${BRIEF_TRUNCATION_NOTICE}`;
+}
+
 /**
  * Read the brief from the transcript. Uses the newest complete pair of marker
  * lines. The echoed request never matches, because its markers are inside a
@@ -285,18 +304,16 @@ export function extractTerminalHandoffBrief(
 	}
 	if (!matched) return null;
 
+	// Keep the content lines as written. Only blank lines at the two
+	// boundaries go, so indentation and hard breaks stay in the brief.
 	const content = rawLines
 		.slice(matched.open + 1, matched.close)
 		.map((line) => stripEscapeSequences(line).replace(/\r$/, ""))
 		.join("\n")
-		.trim();
-	if (!content) return null;
-	// A marker line inside the content means a malformed reply. Return null.
-	// Do not guess which part is the brief.
-	if (markerLines.slice(matched.open + 1, matched.close).includes(open)) {
-		return null;
-	}
-	return boundTranscriptText(content, maxChars);
+		.replace(/^\n+/, "")
+		.replace(/\n+$/, "");
+	if (!content.trim()) return null;
+	return boundBriefText(content, maxChars);
 }
 
 /**

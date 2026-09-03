@@ -19,6 +19,10 @@ import { buildWorkspaceSnapshotSection } from "./handoffWorkspaceSnapshot";
 interface HandoffBriefAttempt {
 	nonce: string;
 	startedAt: number;
+	/** The identity of the source binding at injection time. A new agent
+	 * session in the same terminal gets a new binding, so an old attempt
+	 * never resumes for it. */
+	bindingStartedAt: number;
 	/** True when the attempt reached an end state. A resolved attempt is never
 	 * resumed. The next dialog open makes a new request, so the brief cannot
 	 * omit work done after the old reply. */
@@ -56,8 +60,12 @@ export function useTerminalHandoffBrief(input: {
 	enabled: boolean;
 	/** True when the source agent binding exists and has not ended. */
 	bindingLive: boolean;
+	/** `binding.startedAt` for the current binding. A new agent session in the
+	 * same terminal changes this value, which ends the cached attempt. */
+	bindingStartedAt?: number;
 }): TerminalHandoffBrief {
-	const { workspaceId, terminalId, enabled, bindingLive } = input;
+	const { workspaceId, terminalId, enabled, bindingLive, bindingStartedAt } =
+		input;
 	const trpcUtils = workspaceTrpc.useUtils();
 	const sendRequest = workspaceTrpc.terminal.send.useMutation();
 	const [briefState, setBriefState] = useState<HandoffBriefState>({
@@ -95,6 +103,9 @@ export function useTerminalHandoffBrief(input: {
 					? extractTerminalHandoffBrief(result.text, attempt.nonce)
 					: null;
 				if (brief) {
+					// A matched reply is accepted even when this poll runs past
+					// the budget. The reply is complete and carries the nonce.
+					// Dropping it would only lower the quality of the seed.
 					attempt.resolved = true;
 					dispatch({ type: "brief", brief });
 					return;
@@ -116,11 +127,19 @@ export function useTerminalHandoffBrief(input: {
 
 		const begin = async () => {
 			const key = attemptKey(workspaceId, terminalId);
+			// Prune expired entries, so the map stays bounded by terminals with
+			// an attempt inside the TTL.
+			for (const [entryKey, entry] of attempts) {
+				if (!isBriefAttemptFresh(entry.startedAt, Date.now())) {
+					attempts.delete(entryKey);
+				}
+			}
 			const cached = attempts.get(key);
 			if (
 				bindingLive &&
 				cached &&
 				!cached.resolved &&
+				cached.bindingStartedAt === bindingStartedAt &&
 				isBriefAttemptFresh(cached.startedAt, Date.now())
 			) {
 				// Continue the same attempt: same nonce, original start time.
@@ -141,14 +160,20 @@ export function useTerminalHandoffBrief(input: {
 				}
 				if (cancelled) return;
 				if (!shouldAttemptBrief({ bindingLive, hasRunningProcess })) {
-					// No agent can answer. Stay idle. The dialog will use the
-					// transcript prompt.
+					// No agent can answer. End any cached attempt, so a later
+					// dialog open makes a new request. Stay idle. The dialog
+					// will use the transcript prompt.
+					if (cached) cached.resolved = true;
 					dispatch({ type: "reset" });
 					return;
 				}
 				const nonce = mintNonce();
 				const startedAt = Date.now();
-				attempts.set(key, { nonce, startedAt });
+				attempts.set(key, {
+					nonce,
+					startedAt,
+					bindingStartedAt: bindingStartedAt ?? 0,
+				});
 				dispatch({ type: "start", nonce, now: startedAt });
 				try {
 					await sendRequest.mutateAsync({
@@ -194,6 +219,7 @@ export function useTerminalHandoffBrief(input: {
 	}, [
 		enabled,
 		bindingLive,
+		bindingStartedAt,
 		terminalId,
 		workspaceId,
 		trpcUtils,
