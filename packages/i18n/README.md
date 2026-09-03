@@ -20,8 +20,13 @@ shared `i18n` instance, one locale list. Strategy and phasing:
 
 - `bun run extract` regenerates `locales/*/messages.po` from source (also runs
   on `pretypecheck`, so `turbo typecheck` keeps catalogs fresh).
-- `bun run compile` emits the committed `locales/*/messages.ts` the apps
-  import; `--strict` fails on missing translations.
+- `bun run build` compiles `locales/*/messages.po` into the `locales/*/messages.ts`
+  the apps import; `--strict` fails on missing translations. The compiled files
+  are **gitignored and generated**: root `postinstall` builds them after every
+  install, turbo's `build`/`typecheck`/`test`/`dev` tasks depend on
+  `@superset/i18n#build`, and the turbo cache restores them. Only the `.po`
+  files are committed. (A committed `messages.ts` is one line per locale, so
+  any two PRs that each added a string conflicted on all seventeen.)
 - CI runs `bun run check` (extract + strict compile + stale-translation audit +
   clean `git diff`) in the lint job, so drift between source and committed
   catalogs fails CI.
