@@ -97,3 +97,6 @@ superset-dev-data/
 
 # Local-only plans (not tracked)
 plans/local/
+
+# bun build temp artifacts (random hash per run)
+packages/cli/.*.bun-build
