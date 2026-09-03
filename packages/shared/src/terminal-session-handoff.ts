@@ -148,6 +148,16 @@ ${fence}`;
 export const TERMINAL_HANDOFF_BRIEF_MAX_CHARS = 12_000;
 
 /**
+ * The transcript window to read for one brief: the brief budget plus room for
+ * the two marker lines, the echoed request, and nearby terminal text. The
+ * window must be larger than the brief budget. A window equal to the budget
+ * can push the opening marker out of the oldest text, and then no pair
+ * matches.
+ */
+export const TERMINAL_HANDOFF_BRIEF_CAPTURE_CHARS =
+	TERMINAL_HANDOFF_BRIEF_MAX_CHARS + 2_000;
+
+/**
  * The nonce identifies the reply. The transcript API returns only the newest
  * text, with no stable start position. A random marker is hard to predict, so
  * old text or false text cannot produce a matching reply.
@@ -246,6 +256,10 @@ function stripEscapeSequences(line: string): string {
  * lines. The echoed request never matches, because its markers are inside a
  * sentence. Returns null for a missing, empty, or malformed reply. The caller
  * then uses the transcript prompt.
+ *
+ * Decoration removal applies to marker matching only. The brief content keeps
+ * its list markers, indentation, and pipes, so the target agent receives the
+ * markdown that the source agent wrote.
  */
 export function extractTerminalHandoffBrief(
 	transcript: string,
@@ -253,14 +267,15 @@ export function extractTerminalHandoffBrief(
 	maxChars: number = TERMINAL_HANDOFF_BRIEF_MAX_CHARS,
 ): string | null {
 	const { open, close } = buildHandoffBriefMarkers(nonce);
-	const lines = transcript
-		.split("\n")
-		.map((line) => stripHandoffLineDecoration(stripEscapeSequences(line)));
+	const rawLines = transcript.split("\n");
+	const markerLines = rawLines.map((line) =>
+		stripHandoffLineDecoration(stripEscapeSequences(line)),
+	);
 
 	let pendingOpen = -1;
 	let matched: { open: number; close: number } | null = null;
-	for (let index = 0; index < lines.length; index++) {
-		const line = lines[index];
+	for (let index = 0; index < markerLines.length; index++) {
+		const line = markerLines[index];
 		if (line === open) {
 			pendingOpen = index;
 		} else if (line === close && pendingOpen >= 0) {
@@ -270,14 +285,15 @@ export function extractTerminalHandoffBrief(
 	}
 	if (!matched) return null;
 
-	const content = lines
+	const content = rawLines
 		.slice(matched.open + 1, matched.close)
+		.map((line) => stripEscapeSequences(line).replace(/\r$/, ""))
 		.join("\n")
 		.trim();
 	if (!content) return null;
 	// A marker line inside the content means a malformed reply. Return null.
 	// Do not guess which part is the brief.
-	if (lines.slice(matched.open + 1, matched.close).includes(open)) {
+	if (markerLines.slice(matched.open + 1, matched.close).includes(open)) {
 		return null;
 	}
 	return boundTranscriptText(content, maxChars);

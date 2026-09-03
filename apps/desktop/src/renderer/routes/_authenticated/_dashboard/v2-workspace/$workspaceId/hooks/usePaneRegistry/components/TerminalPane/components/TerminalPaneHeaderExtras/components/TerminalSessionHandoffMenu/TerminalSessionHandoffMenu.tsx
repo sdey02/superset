@@ -154,27 +154,33 @@ export function TerminalSessionHandoffMenu({
 			}
 
 			if (!selectedConfig) return;
-			// Continue stays disabled without a transcript, and the dialog says
-			// why inline; this only guards the impossible.
-			if (!transcript) return;
 			const brief =
 				briefState.status === "ready" ? briefState.brief : undefined;
-			const prompt = brief
-				? buildTerminalSessionHandoffBriefPrompt({
+			if (brief) {
+				const result = await onCreateNewAgentSession({
+					configId: selectedConfig.id,
+					placement,
+					prompt: buildTerminalSessionHandoffBriefPrompt({
 						brief,
 						workspaceSnapshot: workspaceSnapshot ?? undefined,
 						sourceAgentLabel: sourceConfig?.label ?? binding?.agentId,
 						sourceTerminalId: terminalId,
-					})
-				: buildTerminalSessionHandoffPrompt({
-						transcript,
-						sourceAgentLabel: sourceConfig?.label ?? binding?.agentId,
-						sourceTerminalId: terminalId,
-					});
+					}),
+				});
+				if (result) setAction(null);
+				return;
+			}
+			// Continue stays disabled without a transcript, and the dialog says
+			// why inline; this only guards the impossible.
+			if (!transcript) return;
 			const result = await onCreateNewAgentSession({
 				configId: selectedConfig.id,
 				placement,
-				prompt,
+				prompt: buildTerminalSessionHandoffPrompt({
+					transcript,
+					sourceAgentLabel: sourceConfig?.label ?? binding?.agentId,
+					sourceTerminalId: terminalId,
+				}),
 			});
 			if (result) setAction(null);
 		} finally {
@@ -196,17 +202,17 @@ export function TerminalSessionHandoffMenu({
 
 	const start = useCallback(async () => {
 		if (!action) return;
-		if (action === "handoff" && briefState.status === "waiting" && transcript) {
+		if (action === "handoff" && briefState.status === "waiting") {
 			// The brief can arrive soon. Give it a short grace time. After the
 			// grace time, use the transcript prompt.
 			setGraceDeadline(briefContinueDeadline(briefState, Date.now()));
 			return;
 		}
 		await launch();
-	}, [action, briefState, transcript, launch]);
+	}, [action, briefState, launch]);
 
 	// During the grace time: the arrival or failure of the brief ends the
-	// wait now. At the deadline, use the transcript prompt.
+	// wait now. At the deadline, continue without the brief.
 	useEffect(() => {
 		if (graceDeadline === null) return;
 		if (briefState.status !== "waiting") {
@@ -215,15 +221,15 @@ export function TerminalSessionHandoffMenu({
 			return;
 		}
 		const remaining = graceDeadline - Date.now();
-		const finishWithTranscript = () => {
+		const finishWithoutBrief = () => {
 			setGraceDeadline(null);
 			void launch();
 		};
 		if (remaining <= 0) {
-			finishWithTranscript();
+			finishWithoutBrief();
 			return;
 		}
-		const timer = setTimeout(finishWithTranscript, remaining);
+		const timer = setTimeout(finishWithoutBrief, remaining);
 		return () => clearTimeout(timer);
 	}, [graceDeadline, briefState.status, launch]);
 
@@ -455,9 +461,10 @@ export function TerminalSessionHandoffMenu({
 								graceDeadline !== null ||
 								(action === "fork"
 									? !canFork
-									: // Nothing to hand over, or the read failed: refuse before
-										// the click rather than after it.
-										!selectedConfig || !transcript)
+									: // Continue needs one usable seed: the transcript or a
+										// finished brief. Refuse before the click, not after it.
+										!selectedConfig ||
+										(!transcript && briefState.status !== "ready"))
 							}
 						>
 							{isStarting ? (

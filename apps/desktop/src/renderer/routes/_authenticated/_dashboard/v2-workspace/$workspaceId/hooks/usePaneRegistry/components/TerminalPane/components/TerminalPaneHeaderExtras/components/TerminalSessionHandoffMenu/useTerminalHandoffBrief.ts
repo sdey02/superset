@@ -2,7 +2,7 @@ import { sanitizePromptForPty } from "@superset/shared/agent-prompt-launch";
 import {
 	buildTerminalHandoffBriefRequestPrompt,
 	extractTerminalHandoffBrief,
-	TERMINAL_HANDOFF_BRIEF_MAX_CHARS,
+	TERMINAL_HANDOFF_BRIEF_CAPTURE_CHARS,
 } from "@superset/shared/terminal-session-handoff";
 import { workspaceTrpc } from "@superset/workspace-client";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -19,6 +19,10 @@ import { buildWorkspaceSnapshotSection } from "./handoffWorkspaceSnapshot";
 interface HandoffBriefAttempt {
 	nonce: string;
 	startedAt: number;
+	/** True when the attempt reached an end state. A resolved attempt is never
+	 * resumed. The next dialog open makes a new request, so the brief cannot
+	 * omit work done after the old reply. */
+	resolved?: boolean;
 }
 
 /**
@@ -84,13 +88,14 @@ export function useTerminalHandoffBrief(input: {
 				const result = await trpcUtils.terminal.transcript.fetch({
 					workspaceId,
 					terminalId,
-					maxChars: TERMINAL_HANDOFF_BRIEF_MAX_CHARS,
+					maxChars: TERMINAL_HANDOFF_BRIEF_CAPTURE_CHARS,
 				});
 				if (cancelled) return;
 				const brief = result.text
 					? extractTerminalHandoffBrief(result.text, attempt.nonce)
 					: null;
 				if (brief) {
+					attempt.resolved = true;
 					dispatch({ type: "brief", brief });
 					return;
 				}
@@ -99,7 +104,10 @@ export function useTerminalHandoffBrief(input: {
 				// limits the wait.
 			}
 			dispatch({ type: "timeout", now: Date.now() });
-			if (cancelled || stateRef.current.status !== "waiting") return;
+			if (cancelled || stateRef.current.status !== "waiting") {
+				attempt.resolved = true;
+				return;
+			}
 			pollTimer = setTimeout(
 				() => void poll(attempt),
 				HANDOFF_BRIEF_POLL_INTERVAL_MS,
@@ -112,6 +120,7 @@ export function useTerminalHandoffBrief(input: {
 			if (
 				bindingLive &&
 				cached &&
+				!cached.resolved &&
 				isBriefAttemptFresh(cached.startedAt, Date.now())
 			) {
 				// Continue the same attempt: same nonce, original start time.
@@ -151,6 +160,13 @@ export function useTerminalHandoffBrief(input: {
 						submit: true,
 					});
 				} catch {
+					// The send did not complete. Remove this attempt, so a later
+					// dialog open makes a new request instead of waiting for a
+					// reply that was never requested. Keep entries from newer
+					// attempts.
+					if (attempts.get(key)?.nonce === nonce) {
+						attempts.delete(key);
+					}
 					if (!cancelled) dispatch({ type: "send-failed" });
 					return;
 				}
@@ -189,9 +205,11 @@ export function useTerminalHandoffBrief(input: {
 	// dialog will use the transcript prompt.
 	useEffect(() => {
 		if (enabled && !bindingLive && stateRef.current.status === "waiting") {
+			const attempt = attempts.get(attemptKey(workspaceId, terminalId));
+			if (attempt) attempt.resolved = true;
 			dispatch({ type: "agent-ended" });
 		}
-	}, [enabled, bindingLive, dispatch]);
+	}, [enabled, bindingLive, dispatch, workspaceId, terminalId]);
 
 	return { briefState, workspaceSnapshot };
 }

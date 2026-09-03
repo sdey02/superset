@@ -33,6 +33,20 @@ function mergeChangedFiles(
 
 const MAX_LISTED_FILES = 50;
 
+/**
+ * Git path names can contain newlines and other control characters. This
+ * section is line-based, so a raw control character can forge extra lines
+ * that look like Superset wrote them. Show control characters in escaped
+ * form instead.
+ */
+function renderPath(path: string): string {
+	return path
+		.replaceAll("\\", "\\\\")
+		.replaceAll("\n", "\\n")
+		.replaceAll("\r", "\\r")
+		.replaceAll("\t", "\\t");
+}
+
 export function buildWorkspaceSnapshotSection(
 	status: HandoffWorkspaceGitStatus,
 ): string | null {
@@ -59,7 +73,7 @@ export function buildWorkspaceSnapshotSection(
 	for (const file of files.slice(0, MAX_LISTED_FILES)) {
 		const marker = file.status ? `${file.status[0].toUpperCase()} ` : "";
 		lines.push(
-			`- ${marker}${file.path} (+${file.additions} / -${file.deletions})`,
+			`- ${marker}${renderPath(file.path)} (+${file.additions} / -${file.deletions})`,
 		);
 	}
 	if (files.length > MAX_LISTED_FILES) {

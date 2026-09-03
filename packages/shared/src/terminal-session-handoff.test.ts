@@ -7,6 +7,7 @@ import {
 	buildTerminalSessionHandoffBriefPrompt,
 	buildTerminalSessionHandoffPrompt,
 	extractTerminalHandoffBrief,
+	TERMINAL_HANDOFF_BRIEF_CAPTURE_CHARS,
 	TERMINAL_HANDOFF_BRIEF_MAX_CHARS,
 	TERMINAL_HANDOFF_MAX_CHARS,
 	TRANSCRIPT_TRUNCATION_NOTICE,
@@ -171,9 +172,27 @@ describe("extractTerminalHandoffBrief", () => {
 		expect(extractTerminalHandoffBrief(transcript, nonce)).toBe(brief);
 	});
 
-	it("strips TUI decoration around marker lines", () => {
-		const transcript = `╭─ ${open} ─╮\n│ ${brief} │\n╰─ ${close} ─╯`;
+	it("strips TUI decoration around marker lines only", () => {
+		const transcript = `╭─ ${open} ─╮\n${brief}\n╰─ ${close} ─╯`;
 		expect(extractTerminalHandoffBrief(transcript, nonce)).toBe(brief);
+	});
+
+	it("keeps list markers and indentation in the content", () => {
+		const content = "- `src/a.ts`\n    indented output\n| pipe | row |";
+		const transcript = `${open}\n${content}\n${close}`;
+		expect(extractTerminalHandoffBrief(transcript, nonce)).toBe(content);
+	});
+
+	it("extracts a maximum-size brief from a capture-window tail slice", () => {
+		const content = `${"x".repeat(TERMINAL_HANDOFF_BRIEF_MAX_CHARS - 1)}\nend`;
+		const marked = `${open}\n${content}\n${close}`;
+		const noise = "request echo and terminal output before the reply\n".repeat(
+			20,
+		);
+		const window = `${noise}${marked}`.slice(
+			-TERMINAL_HANDOFF_BRIEF_CAPTURE_CHARS,
+		);
+		expect(extractTerminalHandoffBrief(window, nonce)).not.toBeNull();
 	});
 
 	it("prefers the newest complete pair", () => {
