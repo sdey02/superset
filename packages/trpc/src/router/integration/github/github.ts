@@ -180,6 +180,131 @@ export const githubRouter = {
 			});
 		}),
 
+	/**
+	 * The pull request to show for each (repository, head branch) pair — what
+	 * a sidebar row needs and nothing more. One PR per ref: an open one wins,
+	 * otherwise the most recently updated. Repositories are matched by full
+	 * name within the organization's installation, so a ref for a repository
+	 * the App is not installed on simply has no entry.
+	 *
+	 * `hasInstallation` lets a client that has its own PR source (a host it
+	 * can reach) decide whether to fall back to it.
+	 */
+	getByBranches: protectedProcedure
+		.input(
+			z.object({
+				organizationId: z.string().uuid(),
+				refs: z
+					.array(
+						z.object({
+							repoFullName: z.string().min(1),
+							headBranch: z.string().min(1),
+						}),
+					)
+					.max(500),
+			}),
+		)
+		.query(async ({ ctx, input }) => {
+			await verifyOrgMembership(ctx.session.user.id, input.organizationId);
+
+			const installation = await db.query.githubInstallations.findFirst({
+				where: eq(githubInstallations.organizationId, input.organizationId),
+				columns: { id: true },
+			});
+			if (!installation) {
+				return { hasInstallation: false, pullRequests: [] };
+			}
+			if (input.refs.length === 0) {
+				return { hasInstallation: true, pullRequests: [] };
+			}
+
+			const repos = await db.query.githubRepositories.findMany({
+				where: eq(githubRepositories.installationId, installation.id),
+				columns: { id: true, fullName: true, defaultBranch: true },
+			});
+			const repoByFullName = new Map(
+				repos.map((repo) => [repo.fullName.toLowerCase(), repo]),
+			);
+			const fullNameByRepoId = new Map(
+				repos.map((repo) => [repo.id, repo.fullName]),
+			);
+
+			const wanted = new Set<string>();
+			const repoIds = new Set<string>();
+			const branches = new Set<string>();
+			for (const ref of input.refs) {
+				const repo = repoByFullName.get(ref.repoFullName.toLowerCase());
+				if (!repo) continue;
+				// The table records a PR's head branch but not the repository it
+				// lives in, so a fork's `main` is indistinguishable from this one's.
+				// A checkout of the default branch has no PR of its own, and would
+				// otherwise pick up whichever fork last opened one from theirs.
+				if (ref.headBranch === repo.defaultBranch) continue;
+				wanted.add(`${repo.id}\n${ref.headBranch}`);
+				repoIds.add(repo.id);
+				branches.add(ref.headBranch);
+			}
+			if (wanted.size === 0) {
+				return { hasInstallation: true, pullRequests: [] };
+			}
+
+			const rows = await db
+				.select({
+					repositoryId: githubPullRequests.repositoryId,
+					headBranch: githubPullRequests.headBranch,
+					number: githubPullRequests.prNumber,
+					url: githubPullRequests.url,
+					title: githubPullRequests.title,
+					state: githubPullRequests.state,
+					isDraft: githubPullRequests.isDraft,
+					reviewDecision: githubPullRequests.reviewDecision,
+					checksStatus: githubPullRequests.checksStatus,
+					checks: githubPullRequests.checks,
+					mergedAt: githubPullRequests.mergedAt,
+					updatedAt: githubPullRequests.updatedAt,
+				})
+				.from(githubPullRequests)
+				.where(
+					and(
+						eq(githubPullRequests.organizationId, input.organizationId),
+						inArray(githubPullRequests.repositoryId, [...repoIds]),
+						inArray(githubPullRequests.headBranch, [...branches]),
+					),
+				)
+				.orderBy(desc(githubPullRequests.updatedAt))
+				.limit(2_000);
+
+			// Rows arrive newest first, so the first open PR per ref is the newest
+			// open one, and the first row of any state is the newest overall.
+			const bestByRef = new Map<string, (typeof rows)[number]>();
+			for (const row of rows) {
+				const key = `${row.repositoryId}\n${row.headBranch}`;
+				if (!wanted.has(key)) continue;
+				const existing = bestByRef.get(key);
+				if (!existing || (existing.state !== "open" && row.state === "open")) {
+					bestByRef.set(key, row);
+				}
+			}
+
+			return {
+				hasInstallation: true,
+				pullRequests: [...bestByRef.values()].map((row) => ({
+					repoFullName: fullNameByRepoId.get(row.repositoryId) ?? "",
+					headBranch: row.headBranch,
+					number: row.number,
+					url: row.url,
+					title: row.title,
+					state: row.state,
+					isDraft: row.isDraft,
+					reviewDecision: row.reviewDecision,
+					checksStatus: row.checksStatus,
+					checks: row.checks ?? [],
+					mergedAt: row.mergedAt,
+					updatedAt: row.updatedAt,
+				})),
+			};
+		}),
+
 	getStats: protectedProcedure
 		.input(z.object({ organizationId: z.string().uuid() }))
 		.query(async ({ ctx, input }) => {
